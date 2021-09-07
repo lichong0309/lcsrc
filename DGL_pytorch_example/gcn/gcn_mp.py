@@ -14,9 +14,12 @@ import torch.nn.functional as F
 import dgl
 from dgl.data import register_data_args
 from dgl.data import CoraGraphDataset, CiteseerGraphDataset, PubmedGraphDataset
+import time
+
 
 
 def gcn_msg(edge):
+    print("message passing test")
     msg = edge.src['h'] * edge.src['norm']
     return {'m': msg}
 

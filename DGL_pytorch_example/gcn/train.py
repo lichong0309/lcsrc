@@ -117,7 +117,7 @@ def main(args):
     # print()
     # acc = evaluate(model, features, labels, test_mask)
     # print("Test accuracy {:.2%}".format(acc))
-    print("forward finishing...")
+        print("forward finishing...")
 
 
 if __name__ == '__main__':

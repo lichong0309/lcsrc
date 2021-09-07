@@ -6,8 +6,8 @@ import torch.nn.functional as F
 import dgl
 from dgl.data import CoraGraphDataset, CiteseerGraphDataset, PubmedGraphDataset
 
-from gcn import GCN
-#from gcn_mp import GCN
+# from gcn import GCN
+from gcn_mp import GCN
 #from gcn_spmv import GCN
 
 
@@ -51,10 +51,11 @@ def main(args):
     print("""----Data statistics------'
       #Edges %d
       #Classes %d
+      #layer %d
       #Train samples %d
       #Val samples %d
       #Test samples %d""" %
-          (n_edges, n_classes,
+          (n_edges, n_classes, args.n_layers,
               train_mask.int().sum().item(),
               val_mask.int().sum().item(),
               test_mask.int().sum().item()))

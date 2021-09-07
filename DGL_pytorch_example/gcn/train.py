@@ -4,7 +4,7 @@ import numpy as np
 import torch
 import torch.nn.functional as F
 import dgl
-from dgl.data import CoraGraphDataset, CiteseerGraphDataset, PubmedGraphDataset
+from dgl.data import CoraGraphDataset, CiteseerGraphDataset, PubmedGraphDataset, CoauthorPhysicsDataset, RedditDataset
 
 # from gcn import GCN
 from gcn_mp import GCN
@@ -126,7 +126,7 @@ def main(args):
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description='GCN')
     parser.add_argument("--dataset", type=str, default="cora",
-                        help="Dataset name ('cora', 'citeseer', 'pubmed').")
+                        help="Dataset name ('cora', 'citeseer', 'pubmed', 'Coauthor', 'Reddit').")
     parser.add_argument("--dropout", type=float, default=0.5,
                         help="dropout probability")
     parser.add_argument("--gpu", type=int, default=-1,

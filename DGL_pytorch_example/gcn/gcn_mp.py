@@ -27,13 +27,14 @@ def gcn_msg(edge):
     print("message passing time:", t1)
     return {'m': msg}
 
-
+t_all = 0.0
 def gcn_reduce(node):
+    global t_all
     t0 = time.time()
     accum = torch.sum(node.mailbox['m'], 1) * node.data['norm']
     t1 = time.time()
-    t = t1 - t0
-    print("aggregation time:", t)
+    t_all = t1 - t0 + t_all
+    print("aggregation time:", t_all)
     return {'h': accum}
 
 

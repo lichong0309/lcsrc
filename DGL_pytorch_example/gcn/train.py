@@ -100,23 +100,24 @@ def main(args):
             t0 = time.time()
         # forward
         logits = model(features)
-        loss = loss_fcn(logits[train_mask], labels[train_mask])
+        # loss = loss_fcn(logits[train_mask], labels[train_mask])
 
-        optimizer.zero_grad()
-        loss.backward()
-        optimizer.step()
+        # optimizer.zero_grad()
+        # loss.backward()
+        # optimizer.step()
 
-        if epoch >= 3:
-            dur.append(time.time() - t0)
+        # if epoch >= 3:
+        #     dur.append(time.time() - t0)
 
-        acc = evaluate(model, features, labels, val_mask)
-        print("Epoch {:05d} | Time(s) {:.4f} | Loss {:.4f} | Accuracy {:.4f} | "
-              "ETputs(KTEPS) {:.2f}". format(epoch, np.mean(dur), loss.item(),
-                                             acc, n_edges / np.mean(dur) / 1000))
+        # acc = evaluate(model, features, labels, val_mask)
+        # print("Epoch {:05d} | Time(s) {:.4f} | Loss {:.4f} | Accuracy {:.4f} | "
+        #       "ETputs(KTEPS) {:.2f}". format(epoch, np.mean(dur), loss.item(),
+        #                                      acc, n_edges / np.mean(dur) / 1000))
 
-    print()
-    acc = evaluate(model, features, labels, test_mask)
-    print("Test accuracy {:.2%}".format(acc))
+    # print()
+    # acc = evaluate(model, features, labels, test_mask)
+    # print("Test accuracy {:.2%}".format(acc))
+    print("forward finishing...")
 
 
 if __name__ == '__main__':

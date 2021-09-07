@@ -19,13 +19,21 @@ import time
 
 
 def gcn_msg(edge):
+    t0 = time.time()
     print("message passing test")
     msg = edge.src['h'] * edge.src['norm']
+    t1 = time.time()
+    t = t1 - t0
+    print("message passing time:", t1)
     return {'m': msg}
 
 
 def gcn_reduce(node):
+    t0 = time.time()
     accum = torch.sum(node.mailbox['m'], 1) * node.data['norm']
+    t1 = time.time()
+    t = t1 - t0
+    print("aggregation time:", t)
     return {'h': accum}
 
 

@@ -91,13 +91,13 @@ def main(args):
     optimizer = torch.optim.Adam(model.parameters(),
                                  lr=args.lr,
                                  weight_decay=args.weight_decay)
-
+    start_time = time.time()
     # initialize graph
     dur = []
     for epoch in range(args.n_epochs):
         model.train()
-        if epoch >= 3:
-            t0 = time.time()
+        # if epoch >= 3:
+        #     t0 = time.time()
         # forward
         logits = model(features)
         # loss = loss_fcn(logits[train_mask], labels[train_mask])
@@ -118,6 +118,9 @@ def main(args):
     # acc = evaluate(model, features, labels, test_mask)
     # print("Test accuracy {:.2%}".format(acc))
         print("forward finishing...")
+    fin_time = time.time()
+    epoch_time = fin_time - start_time
+    print("epoch time:", epoch_time)
 
 
 if __name__ == '__main__':
@@ -130,7 +133,7 @@ if __name__ == '__main__':
                         help="gpu")
     parser.add_argument("--lr", type=float, default=1e-2,
                         help="learning rate")
-    parser.add_argument("--n-epochs", type=int, default=200,
+    parser.add_argument("--n-epochs", type=int, default=1,
                         help="number of training epochs")
     parser.add_argument("--n-hidden", type=int, default=16,
                         help="number of hidden gcn units")

@@ -24,7 +24,7 @@ def gcn_msg(edge):
     msg = edge.src['h'] * edge.src['norm']
     t1 = time.time()
     t = t1 - t0
-    print("message passing time:", t1)
+    print("message passing time:", t)
     return {'m': msg}
 
 t_all = 0.0

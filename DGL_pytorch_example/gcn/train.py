@@ -46,23 +46,23 @@ def main(args):
 
     features = g.ndata['feat']
     labels = g.ndata['label']
-    train_mask = g.ndata['train_mask']
-    val_mask = g.ndata['val_mask']
-    test_mask = g.ndata['test_mask']
+    # train_mask = g.ndata['train_mask']
+    # val_mask = g.ndata['val_mask']
+    # test_mask = g.ndata['test_mask']
     in_feats = features.shape[1]
     n_classes = data.num_labels
     n_edges = data.graph.number_of_edges()
-    print("""----Data statistics------'
-      #Edges %d
-      #Classes %d
-      #layer %d
-      #Train samples %d
-      #Val samples %d
-      #Test samples %d""" %
-          (n_edges, n_classes, args.n_layers,
-              train_mask.int().sum().item(),
-              val_mask.int().sum().item(),
-              test_mask.int().sum().item()))
+    # print("""----Data statistics------'
+    #   #Edges %d
+    #   #Classes %d
+    #   #layer %d
+    #   #Train samples %d
+    #   #Val samples %d
+    #   #Test samples %d""" %
+    #       (n_edges, n_classes, args.n_layers,
+    #           train_mask.int().sum().item(),
+    #           val_mask.int().sum().item(),
+    #           test_mask.int().sum().item()))
     print("dataset is :", args.dataset)
     # add self loop
     if args.self_loop:

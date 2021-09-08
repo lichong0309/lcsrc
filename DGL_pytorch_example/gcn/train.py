@@ -4,7 +4,7 @@ import numpy as np
 import torch
 import torch.nn.functional as F
 import dgl
-from dgl.data import CoraGraphDataset, CiteseerGraphDataset, PubmedGraphDataset, CoauthorPhysicsDataset, RedditDataset
+from dgl.data import CoraGraphDataset, CiteseerGraphDataset, PubmedGraphDataset, RedditDataset, PPIDataset
 
 # from gcn import GCN
 from gcn_mp import GCN
@@ -30,10 +30,10 @@ def main(args):
         data = CiteseerGraphDataset()
     elif args.dataset == 'pubmed':
         data = PubmedGraphDataset()
-    elif args.dataset == 'coauthor':
-        data = CoauthorPhysicsDataset()
     elif args.dataset == 'reddit':
         data = RedditDataset()
+    elif args.dataset == 'ppi':
+        data = PPIDataset()
     else:
         raise ValueError('Unknown dataset: {}'.format(args.dataset))
 
@@ -52,18 +52,18 @@ def main(args):
     in_feats = features.shape[1]
     n_classes = data.num_labels
     n_edges = data.graph.number_of_edges()
-    # print("""----Data statistics------'
-    #   #Edges %d
-    #   #Classes %d
-    #   #layer %d
-    #   #Train samples %d
-    #   #Val samples %d
-    #   #Test samples %d""" %
-    #       (n_edges, n_classes, args.n_layers,
-    #           train_mask.int().sum().item(),
-    #           val_mask.int().sum().item(),
-    #           test_mask.int().sum().item()))
-    # print("dataset is :", args.dataset)
+    print("""----Data statistics------'
+      #Edges %d
+      #Classes %d
+      #layer %d
+      #Train samples %d
+      #Val samples %d
+      #Test samples %d""" %
+          (n_edges, n_classes, args.n_layers,
+              train_mask.int().sum().item(),
+              val_mask.int().sum().item(),
+              test_mask.int().sum().item()))
+    print("dataset is :", args.dataset)
     # add self loop
     if args.self_loop:
         g = dgl.remove_self_loop(g)
@@ -130,7 +130,7 @@ def main(args):
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description='GCN')
     parser.add_argument("--dataset", type=str, default="cora",
-                        help="Dataset name ('cora', 'citeseer', 'pubmed', 'coauthor', 'reddit').")
+                        help="Dataset name ('cora', 'citeseer', 'pubmed', 'coauthor', 'reddit', 'ppi').")
     parser.add_argument("--dropout", type=float, default=0.5,
                         help="dropout probability")
     parser.add_argument("--gpu", type=int, default=-1,

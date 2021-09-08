@@ -4,8 +4,7 @@ import numpy as np
 import torch
 import torch.nn.functional as F
 import dgl
-from dgl.data import CoraGraphDataset, CiteseerGraphDataset, PubmedGraphDataset, CoauthorPhysicsDataset, RedditDataset,
-
+from dgl.data import CoraGraphDataset, CiteseerGraphDataset, PubmedGraphDataset, CoauthorPhysicsDataset, RedditDataset
 
 # from gcn import GCN
 from gcn_mp import GCN
@@ -53,7 +52,7 @@ def main(args):
     in_feats = features.shape[1]
     n_classes = data.num_labels
     n_edges = data.graph.number_of_edges()
-    print("""----Data statistics------'
+    # print("""----Data statistics------'
     #   #Edges %d
     #   #Classes %d
     #   #layer %d
@@ -64,7 +63,7 @@ def main(args):
     #           train_mask.int().sum().item(),
     #           val_mask.int().sum().item(),
     #           test_mask.int().sum().item()))
-    print("dataset is :", args.dataset)
+    # print("dataset is :", args.dataset)
     # add self loop
     if args.self_loop:
         g = dgl.remove_self_loop(g)

@@ -42,7 +42,7 @@ def main(args):
     elif args.dataset == 'imdb':
         data = GINDataset(name = 'IMDBMULTI')
     elif args.dataset == 'collab':
-        data = GINDataset(name = 'COLLAB')
+        data = GINDataset(name = 'COLLAB', self_loop = False)
     else:
         raise ValueError('Unknown dataset: {}'.format(args.dataset))
 

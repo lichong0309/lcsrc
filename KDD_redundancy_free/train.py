@@ -51,7 +51,8 @@ def main(args):
         cuda = False
     else:
         cuda = True
-        g = g.int().to(args.gpu)
+        device = 'cuda:0'
+        g = g.int().to(device)
 
     features = g.ndata['feat']
     labels = g.ndata['label']
@@ -84,7 +85,7 @@ def main(args):
     norm = torch.pow(degs, -0.5)
     norm[torch.isinf(norm)] = 0
     if cuda:
-        norm = norm.cuda()
+        norm = norm.to(device)
     g.ndata['norm'] = norm.unsqueeze(1)
 
     # create GCN model
@@ -97,7 +98,7 @@ def main(args):
                 args.dropout)
 
     if cuda:
-        model.cuda()
+        model.to(device)
     loss_fcn = torch.nn.CrossEntropyLoss()
 
     # use optimizer

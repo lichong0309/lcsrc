@@ -37,7 +37,7 @@ def main(args):
         data = RedditDataset()
     elif args.dataset == 'ppi':
         data = PPIDataset()
-    elif args.datset == 'bzr':
+    elif args.dataset == 'bzr':
         data = TUDataset(name = 'BZR')
     elif args.dataset == 'imdb':
         data = GINDataset(name = 'IMDBMULTI')

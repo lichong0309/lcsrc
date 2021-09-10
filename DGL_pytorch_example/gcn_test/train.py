@@ -7,8 +7,8 @@ import dgl
 from dgl.data import CoraGraphDataset, CiteseerGraphDataset, PubmedGraphDataset, RedditDataset, PPIDataset
 
 # from gcn import GCN
-from gcn_mp_test import GCN
-# from gcn_mp import GCN
+# from gcn_mp_test import GCN
+from gcn_mp import GCN
 #from gcn_spmv import GCN
 
 

@@ -112,7 +112,8 @@ class GCNLayer(nn.Module):
 
         t_update_0 = time.time()
         self.g.ndata['h'] = torch.mm(h, self.weight)   # update
-        self.g.apply_nodes(func= self.node_update)     # 激活函数
+        self.g.apply_nodes(func = self.node_update)     # 激活函数
+        
         t_update_1 = time.time()
         t_update = t_update_1 - t_update_0
         print("update time:", t_update)

@@ -4,10 +4,10 @@ import numpy as np
 import torch
 import torch.nn.functional as F
 import dgl
-from dgl.data import CoraGraphDataset, CiteseerGraphDataset, PubmedGraphDataset
+from dgl.data import CoraGraphDataset, CiteseerGraphDataset, PubmedGraphDataset, RedditDataset, PPIDataset
 
-from gcn import GCN
-#from gcn_mp import GCN
+# from gcn import GCN
+from gcn_mp import GCN
 #from gcn_spmv import GCN
 
 
@@ -30,6 +30,10 @@ def main(args):
         data = CiteseerGraphDataset()
     elif args.dataset == 'pubmed':
         data = PubmedGraphDataset()
+    elif args.dataset == 'reddit':
+        data = RedditDataset()
+    elif args.dataset == 'ppi':
+        data = PPIDataset()
     else:
         raise ValueError('Unknown dataset: {}'.format(args.dataset))
 
@@ -42,23 +46,24 @@ def main(args):
 
     features = g.ndata['feat']
     labels = g.ndata['label']
-    train_mask = g.ndata['train_mask']
-    val_mask = g.ndata['val_mask']
-    test_mask = g.ndata['test_mask']
+    # train_mask = g.ndata['train_mask']
+    # val_mask = g.ndata['val_mask']
+    # test_mask = g.ndata['test_mask']
     in_feats = features.shape[1]
     n_classes = data.num_labels
     n_edges = data.graph.number_of_edges()
-    print("""----Data statistics------'
-      #Edges %d
-      #Classes %d
-      #Train samples %d
-      #Val samples %d
-      #Test samples %d""" %
-          (n_edges, n_classes,
-              train_mask.int().sum().item(),
-              val_mask.int().sum().item(),
-              test_mask.int().sum().item()))
-
+    # print("""----Data statistics------'
+    #   #Edges %d
+    #   #Classes %d
+    #   #layer %d
+    #   #Train samples %d
+    #   #Val samples %d
+    #   #Test samples %d""" %
+    #       (n_edges, n_classes, args.n_layers,
+    #           train_mask.int().sum().item(),
+    #           val_mask.int().sum().item(),
+    #           test_mask.int().sum().item()))
+    print("dataset is :", args.dataset)
     # add self loop
     if args.self_loop:
         g = dgl.remove_self_loop(g)
@@ -90,45 +95,49 @@ def main(args):
     optimizer = torch.optim.Adam(model.parameters(),
                                  lr=args.lr,
                                  weight_decay=args.weight_decay)
-
+    start_time = time.time()
     # initialize graph
     dur = []
     for epoch in range(args.n_epochs):
         model.train()
-        if epoch >= 3:
-            t0 = time.time()
+        # if epoch >= 3:
+        #     t0 = time.time()
         # forward
         logits = model(features)
-        loss = loss_fcn(logits[train_mask], labels[train_mask])
+        # loss = loss_fcn(logits[train_mask], labels[train_mask])
 
-        optimizer.zero_grad()
-        loss.backward()
-        optimizer.step()
+        # optimizer.zero_grad()
+        # loss.backward()
+        # optimizer.step()
 
-        if epoch >= 3:
-            dur.append(time.time() - t0)
+        # if epoch >= 3:
+        #     dur.append(time.time() - t0)
 
-        acc = evaluate(model, features, labels, val_mask)
-        print("Epoch {:05d} | Time(s) {:.4f} | Loss {:.4f} | Accuracy {:.4f} | "
-              "ETputs(KTEPS) {:.2f}". format(epoch, np.mean(dur), loss.item(),
-                                             acc, n_edges / np.mean(dur) / 1000))
+        # acc = evaluate(model, features, labels, val_mask)
+        # print("Epoch {:05d} | Time(s) {:.4f} | Loss {:.4f} | Accuracy {:.4f} | "
+        #       "ETputs(KTEPS) {:.2f}". format(epoch, np.mean(dur), loss.item(),
+        #                                      acc, n_edges / np.mean(dur) / 1000))
 
-    print()
-    acc = evaluate(model, features, labels, test_mask)
-    print("Test accuracy {:.2%}".format(acc))
+    # print()
+    # acc = evaluate(model, features, labels, test_mask)
+    # print("Test accuracy {:.2%}".format(acc))
+        print("forward finishing...")
+    fin_time = time.time()
+    epoch_time = fin_time - start_time
+    print("epoch time:", epoch_time)
 
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description='GCN')
     parser.add_argument("--dataset", type=str, default="cora",
-                        help="Dataset name ('cora', 'citeseer', 'pubmed').")
+                        help="Dataset name ('cora', 'citeseer', 'pubmed', 'coauthor', 'reddit', 'ppi').")
     parser.add_argument("--dropout", type=float, default=0.5,
                         help="dropout probability")
     parser.add_argument("--gpu", type=int, default=-1,
                         help="gpu")
     parser.add_argument("--lr", type=float, default=1e-2,
                         help="learning rate")
-    parser.add_argument("--n-epochs", type=int, default=200,
+    parser.add_argument("--n-epochs", type=int, default=1,
                         help="number of training epochs")
     parser.add_argument("--n-hidden", type=int, default=16,
                         help="number of hidden gcn units")

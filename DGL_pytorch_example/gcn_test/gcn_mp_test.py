@@ -105,7 +105,7 @@ class GCNLayer(nn.Module):
         self.g.ndata['h'] = torch.mm(h, self.weight)
         # self.g.update_all(gcn_msg, gcn_reduce, self.node_update)
 
-        self.g.updata_all(gcn_msg, gcn_reduce)
+        self.g.update_all(gcn_msg, gcn_reduce)
         self.g.apply_nodes(func = self.node_update)
 
 

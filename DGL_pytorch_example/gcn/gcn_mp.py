@@ -99,6 +99,7 @@ class GCNLayer(nn.Module):
         self.weight.data.uniform_(-stdv, stdv)
 
     def forward(self, h):
+        self.g.ndata['h'] = h
         if self.dropout:
             h = self.dropout(h)
         # self.g.ndata['h'] = torch.mm(h, self.weight)

@@ -17,26 +17,40 @@ from dgl.data import CoraGraphDataset, CiteseerGraphDataset, PubmedGraphDataset
 import time
 
 
+# # 消息传递
+# def gcn_msg(edge):
+#     t0 = time.time()
+#     print("message passing test")
+#     msg = edge.src['h'] * edge.src['norm']
+#     t1 = time.time()
+#     t = t1 - t0
+#     print("message passing time:", t)
+#     return {'m': msg}
 
+# # 聚合邻居节点的特征
+# t_all = 0.0
+# def gcn_reduce(node):
+#     global t_all
+#     t0 = time.time()
+#     accum = torch.sum(node.mailbox['m'], 1) * node.data['norm']
+#     t1 = time.time()
+#     t_all = t1 - t0 + t_all
+#     print("aggregation time:", t_all)
+#     return {'h': accum}
+
+
+
+# 消息传递
 def gcn_msg(edge):
-    t0 = time.time()
     print("message passing test")
     msg = edge.src['h'] * edge.src['norm']
-    t1 = time.time()
-    t = t1 - t0
-    print("message passing time:", t)
     return {'m': msg}
 
-t_all = 0.0
-def gcn_reduce(node):
-    global t_all
-    t0 = time.time()
-    accum = torch.sum(node.mailbox['m'], 1) * node.data['norm']
-    t1 = time.time()
-    t_all = t1 - t0 + t_all
-    print("aggregation time:", t_all)
-    return {'h': accum}
+# 聚合邻居节点的特征
 
+def gcn_reduce(node):
+    accum = torch.sum(node.mailbox['m'], 1) * node.data['norm']
+    return {'h': accum}
 
 class NodeApplyModule(nn.Module):
     def __init__(self, out_feats, activation=None, bias=True):
@@ -87,8 +101,17 @@ class GCNLayer(nn.Module):
     def forward(self, h):
         if self.dropout:
             h = self.dropout(h)
-        self.g.ndata['h'] = torch.mm(h, self.weight)
-        self.g.update_all(gcn_msg, gcn_reduce, self.node_update)
+        # self.g.ndata['h'] = torch.mm(h, self.weight)
+        # self.g.update_all(gcn_msg, gcn_reduce, self.node_update)
+        t0 = time.time()
+        self.g.update_all(gcn_msg, gcn_reduce)     # aggreation
+        t1 = time.time()
+        t = t1 - t0
+        print("aggreation time:", t)
+        self.g.ndata['h'] = torch.mm(h, self.weight)   # update
+        self.g.apply_nodes(func= self.node_update)     # 激活函数
+
+
         h = self.g.ndata.pop('h')
         return h
 
@@ -110,7 +133,7 @@ class GCN(nn.Module):
         for i in range(n_layers - 1):
             self.layers.append(GCNLayer(g, n_hidden, n_hidden, activation, dropout))
         # output layer
-        self.layers.append(GCNLayer(g, n_hidden, n_classes, None, dropout))
+        # self.layers.append(GCNLayer(g, n_hidden, n_classes, None, dropout))
 
     def forward(self, features):
         h = features

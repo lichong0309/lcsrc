@@ -38,7 +38,7 @@ def main(args):
     elif args.dataset == 'ppi':
         data = PPIDataset()
     elif args.datset == 'bzr':
-        data = TUDatset(name = 'BZR')
+        data = TUDataset(name = 'BZR')
     elif args.dataset == 'imdb':
         data = GINDataset(name = 'IMDBMULTI')
     elif args.dataset == 'collab':
@@ -143,7 +143,7 @@ if __name__ == '__main__':
                             'imdb', 'collab').")
     parser.add_argument("--dropout", type=float, default=0.5,
                         help="dropout probability")
-    parser.add_argument("--gpu", type=int, default=1,
+    parser.add_argument("--gpu", type=int, default=0,
                         help="gpu")
     parser.add_argument("--lr", type=float, default=1e-2,
                         help="learning rate")

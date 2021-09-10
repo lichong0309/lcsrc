@@ -4,7 +4,7 @@ import numpy as np
 import torch
 import torch.nn.functional as F
 import dgl
-from dgl.data import CoraGraphDataset, CiteseerGraphDataset, PubmedGraphDataset, RedditDataset, PPIDataset, GINDataset, TUDatset
+from dgl.data import CoraGraphDataset, CiteseerGraphDataset, PubmedGraphDataset, RedditDataset, PPIDataset, GINDataset, TUDataset
 
 
 

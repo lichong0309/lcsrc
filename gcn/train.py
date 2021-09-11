@@ -24,6 +24,7 @@ def evaluate(model, features, labels, mask):
 
 
 def main(args):
+    print("main function start...")
     # load and preprocess dataset
     if args.dataset == 'cora':
         data = CoraGraphDataset()

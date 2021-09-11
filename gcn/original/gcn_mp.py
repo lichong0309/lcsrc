@@ -76,7 +76,9 @@ class GCNLayer(nn.Module):
         if self.dropout:
             h = self.dropout(h)
         self.g.ndata['h'] = torch.mm(h, self.weight)
-        self.g.update_all(gcn_msg, gcn_reduce, self.node_update)
+        # self.g.update_all(gcn_msg, gcn_reduce, self.node_update)
+        self.g.update_all(gcn_msg, gcn_reduce)
+        self.g.apply_nodes(func=self.node_update)
         h = self.g.ndata.pop('h')
         return h
 

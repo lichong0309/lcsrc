@@ -123,26 +123,20 @@ class GCNLayer(nn.Module):
     #     return h
 
     def forward(self, h):
-        
         if self.dropout:
             h = self.dropout(h)
         self.g.ndata['h'] = h
         # self.g.ndata['h'] = torch.mm(h, self.weight)
         # self.g.update_all(gcn_msg, gcn_reduce, self.node_update)
-        t0 = time.time()
-        self.g.update_all(gcn_msg, gcn_reduce)     # aggreation
-        t1 = time.time()
-        t = t1 - t0
-        print("aggreation time:", t)
 
-        t_update_0 = time.time()
-        self.g.ndata['h'] = torch.mm(h, self.weight)   # update
+        ####### aggregate stage
+        self.g.update_all(gcn_msg, gcn_reduce)     # aggregation
+
+
+        ######## update stage 
+        self.g.ndata['h'] = torch.mm(self.g.ndata['h'], self.weight)   # update
         self.g.apply_nodes(func = self.node_update)     # 激活函数
         
-        t_update_1 = time.time()
-        t_update = t_update_1 - t_update_0
-        print("update time:", t_update)
-
 
         h = self.g.ndata.pop('h')
         return h

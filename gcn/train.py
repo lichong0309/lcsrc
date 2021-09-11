@@ -103,9 +103,9 @@ def main(args):
 
         start.record()
         # forward
-        with torch.autograd.profiler.profile(use_cuda = True) as prof:
-            logits = model(features)        
-        print("test:\n", prof.key_averages().table())
+        # with torch.autograd.profiler.profile(use_cuda = True) as prof:
+        logits = model(features)        
+        # print("test:\n", prof.key_averages().table())
         loss = loss_fcn(logits[train_mask], labels[train_mask])
 
         optimizer.zero_grad()

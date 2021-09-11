@@ -105,11 +105,12 @@ def main(args):
     optimizer = torch.optim.Adam(model.parameters(),
                                  lr=args.lr,
                                  weight_decay=args.weight_decay)
-    start_time = time.time()
+
     # initialize graph
     dur = []
     for epoch in range(args.n_epochs):
         model.train()
+        start_time = time.time()
         # if epoch >= 3:
         #     t0 = time.time()
         # forward

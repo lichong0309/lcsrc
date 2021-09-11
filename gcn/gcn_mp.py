@@ -78,6 +78,7 @@ class GCNLayer(nn.Module):
         if self.dropout:
             h = self.dropout(h)
         self.g.ndata['h'] = h
+        print("forward test")
 
         with torch.autograd.profiler.profile(use_cuda=True) as prof:
             self.g.update_all(gcn_msg, gcn_reduce)

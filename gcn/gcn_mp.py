@@ -81,10 +81,10 @@ class GCNLayer(nn.Module):
         print("forward test")
 
 
-        # ###### aggregation stage
-        # with torch.autograd.profiler.profile(use_cuda=True) as prof:
-        #     self.g.update_all(gcn_msg, gcn_reduce)
-        # print("aggregated stage:\n", prof)
+        ###### aggregation stage
+        with torch.autograd.profiler.profile(use_cuda=True) as prof:
+            self.g.update_all(gcn_msg, gcn_reduce)
+        print("aggregated stage:\n", prof)
         
         ##### update stage
         with torch.autograd.profiler.profile(use_cuda=True) as prof:
@@ -92,7 +92,7 @@ class GCNLayer(nn.Module):
             self.g.apply_nodes(func = self.node_update)
         print("update stage:\n", prof)
         
-        # h = self.g.ndata.pop('h')
+        h = self.g.ndata.pop('h')
         return h
 
 class GCN(nn.Module):

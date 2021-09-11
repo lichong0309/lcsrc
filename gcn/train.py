@@ -105,8 +105,7 @@ def main(args):
         loss.backward()
         optimizer.step()
 
-        if epoch >= 3:
-            dur.append(time.time() - t0)
+        dur.append(time.time() - t0)
 
         acc = evaluate(model, features, labels, val_mask)
         print("Epoch {:05d} | Time(s) {:.4f} | Loss {:.4f} | Accuracy {:.4f} | "

@@ -9,6 +9,7 @@ from dgl.data import CoraGraphDataset, CiteseerGraphDataset, PubmedGraphDataset
 from gcn import GCN
 #from gcn_mp import GCN
 #from gcn_spmv import GCN
+import torch.autograd
 
 
 def evaluate(model, features, labels, mask):
@@ -98,7 +99,9 @@ def main(args):
 
         t0 = time.time()
         # forward
-        logits = model(features)
+        with torch.autograd.profiler.profile(use_cuda = True) as prof:
+            logits = model(features)        
+        print("test:\n", prof.key_averages().table())
         loss = loss_fcn(logits[train_mask], labels[train_mask])
 
         optimizer.zero_grad()

@@ -39,6 +39,7 @@ def main(args):
         cuda = False
     else:
         cuda = True
+        print("cuda test...")
         g = g.int().to(args.gpu)
 
     features = g.ndata['feat']
@@ -71,6 +72,7 @@ def main(args):
     norm = torch.pow(degs, -0.5)
     norm[torch.isinf(norm)] = 0
     if cuda:
+        print("cuda test_1....")
         norm = norm.cuda()
     g.ndata['norm'] = norm.unsqueeze(1)
 
@@ -111,6 +113,7 @@ def main(args):
         optimizer.zero_grad()
         loss.backward()
         optimizer.step()
+
 
         dur.append(time.time() - t0)
         # end.record()

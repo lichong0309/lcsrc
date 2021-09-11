@@ -14,6 +14,8 @@ import torch.nn.functional as F
 import dgl
 from dgl.data import register_data_args
 from dgl.data import CoraGraphDataset, CiteseerGraphDataset, PubmedGraphDataset
+import torch.autograd
+
 
 
 def gcn_msg(edge):
@@ -76,9 +78,17 @@ class GCNLayer(nn.Module):
         if self.dropout:
             h = self.dropout(h)
         self.g.ndata['h'] = h
-        self.g.update_all(gcn_msg, gcn_reduce)
-        self.g.ndata['h'] = torch.mm(self.g.ndata['h'], self.weight)
-        self.g.apply_nodes(func = self.node_update)
+
+        with torch.autograd.profiler.profile(use_cuda=True) as prof:
+            self.g.update_all(gcn_msg, gcn_reduce)
+        print("aggregated stage:\n", prof)
+        
+
+        with torch.autograd.profiler.profile(use_cuda=True) as prof:
+            self.g.ndata['h'] = torch.mm(self.g.ndata['h'], self.weight)
+            self.g.apply_nodes(func = self.node_update)
+        print("update stage:\n", prof)
+        
         # self.g.update_all(gcn_msg, gcn_reduce, self.node_update)
         h = self.g.ndata.pop('h')
         return h

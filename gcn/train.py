@@ -103,9 +103,9 @@ def main(args):
 
         start.record()
         # forward
-        # with torch.autograd.profiler.profile(use_cuda = True) as prof:
-        logits = model(features)        
-        # print("test:\n", prof.key_averages().table())
+        with torch.autograd.profiler.profile(use_cuda = True) as prof:
+            logits = model(features)         
+        print("test:\n", prof.key_averages().table())
         loss = loss_fcn(logits[train_mask], labels[train_mask])
 
         optimizer.zero_grad()
@@ -118,7 +118,7 @@ def main(args):
         dur.append(start.elapsed_time(end))
 
         acc = evaluate(model, features, labels, val_mask)
-        print("Epoch {:05d} | Time(s) {:.4f} | Loss {:.4f} | Accuracy {:.4f} | "
+        print("Epoch {:05d} | Time(ms) {:.4f} | Loss {:.4f} | Accuracy {:.4f} | "
               "ETputs(KTEPS) {:.2f}". format(epoch, np.mean(dur), loss.item(),
                                              acc, n_edges / np.mean(dur) / 1000))
 

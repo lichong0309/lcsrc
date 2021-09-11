@@ -75,23 +75,25 @@ class GCNLayer(nn.Module):
         self.weight.data.uniform_(-stdv, stdv)
 
     def forward(self, h):
-        if self.dropout:
-            h = self.dropout(h)
+        # if self.dropout:
+        #     h = self.dropout(h)
         self.g.ndata['h'] = h
         print("forward test")
 
+
+        ###### aggregation stage
         with torch.autograd.profiler.profile(use_cuda=True) as prof:
             self.g.update_all(gcn_msg, gcn_reduce)
         print("aggregated stage:\n", prof)
         
-
-        with torch.autograd.profiler.profile(use_cuda=True) as prof:
-            self.g.ndata['h'] = torch.mm(self.g.ndata['h'], self.weight)
-            self.g.apply_nodes(func = self.node_update)
-        print("update stage:\n", prof)
+        # ##### update stage
+        # with torch.autograd.profiler.profile(use_cuda=True) as prof:
+        #     self.g.ndata['h'] = torch.mm(self.g.ndata['h'], self.weight)
+        #     self.g.apply_nodes(func = self.node_update)
+        # print("update stage:\n", prof)
         
         # self.g.update_all(gcn_msg, gcn_reduce, self.node_update)
-        h = self.g.ndata.pop('h')
+        # h = self.g.ndata.pop('h')
         return h
 
 class GCN(nn.Module):

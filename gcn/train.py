@@ -97,11 +97,11 @@ def main(args):
     for epoch in range(args.n_epochs):
         model.train()
 
-        # t0 = time.time()
-        start = torch.cuda.Event(enable_timing=True)
-        end = torch.cuda.Event(enable_timing=True)
+        t0 = time.time()
+        # start = torch.cuda.Event(enable_timing=True)
+        # end = torch.cuda.Event(enable_timing=True)
 
-        start.record()
+        # start.record()
         # forward
         with torch.autograd.profiler.profile(use_cuda = True) as prof:
             logits = model(features)         
@@ -112,10 +112,10 @@ def main(args):
         loss.backward()
         optimizer.step()
 
-        # dur.append(time.time() - t0)
-        end.record()
-        torch.cuda.synchronize()
-        dur.append(start.elapsed_time(end))
+        dur.append(time.time() - t0)
+        # end.record()
+        # torch.cuda.synchronize()
+        # dur.append(start.elapsed_time(end))
 
         acc = evaluate(model, features, labels, val_mask)
         print("Epoch {:05d} | Time(ms) {:.4f} | Loss {:.4f} | Accuracy {:.4f} | "

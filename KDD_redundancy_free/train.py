@@ -133,9 +133,9 @@ def main(args):
     # acc = evaluate(model, features, labels, test_mask)
     # print("Test accuracy {:.2%}".format(acc))
         print("forward finishing...")
-    fin_time = time.time()
-    epoch_time = fin_time - start_time
-    print("epoch time:", epoch_time)
+        fin_time = time.time()
+        epoch_time = fin_time - start_time
+        print("epoch time:", epoch_time)
 
 
 if __name__ == '__main__':

@@ -95,8 +95,8 @@ def main(args):
     dur = []
     for epoch in range(args.n_epochs):
         model.train()
-        if epoch >= 3:
-            t0 = time.time()
+
+        t0 = time.time()
         # forward
         logits = model(features)
         loss = loss_fcn(logits[train_mask], labels[train_mask])

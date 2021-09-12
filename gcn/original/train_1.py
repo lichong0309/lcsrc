@@ -93,7 +93,7 @@ def get_HA_adjacency_matrix(g):
                     edge_id = g.edge_ids(i, ltemp)
                     g.remove_edges(edge_id)
                 for ltemp in same_node_i_j:
-                    edge_id = g.edge_ids(i, ltemp)
+                    edge_id = g.edge_ids(j, ltemp)
                     g.remove_edges(edge_id)
             else:
                 pass

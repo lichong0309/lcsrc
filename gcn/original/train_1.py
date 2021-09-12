@@ -46,6 +46,7 @@ def get_HA_adjacency_matrix(g):
 
     Node_same_list = [[],[]]
     for i in range(num_adj):
+        print("Node i-th start....")
         temp_i = []     ### 存放i节点非零的节点编号，即节点i的目标节点
         ### 获得节点i的目标节点
         for a in range(num_adj):
@@ -88,6 +89,7 @@ def get_HA_adjacency_matrix(g):
                     g.remove_edge(j, ltemp)
             else:
                 pass
+        print("Node i-th finish....")
 
     return g
 

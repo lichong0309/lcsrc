@@ -90,9 +90,11 @@ def get_HA_adjacency_matrix(g):
                 g.add_edge(src_list, dis_list)
                 ### 删除边
                 for ltemp in same_node_i_j:
-                    g.remove_edges(i, ltemp)
+                    edge_id = g.edge_ids(i, ltemp)
+                    g.remove_edges(edge_id)
                 for ltemp in same_node_i_j:
-                    g.remove_edges(j, ltemp)
+                    edge_id = g.edge_ids(i, ltemp)
+                    g.remove_edges(edge_id)
             else:
                 pass
         print("Node i-th finish....")

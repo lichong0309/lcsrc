@@ -54,9 +54,10 @@ def get_HA_adjacency_matrix(g):
         #         pass
         #     else:
         #         temp_i.append(a)
-        successors_i = g.successors(i)
+        
 
         for j in range((i+1), num_node):
+            successors_i = g.successors(i)              # 得到节点i的目标节点
             # temp_j = []      ### 存放j节点非零的节点编号，即节点j的目标节点
             # ### 获得节点j的目标节点
             # for b in range(num_adj):

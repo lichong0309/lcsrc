@@ -69,7 +69,7 @@ def get_HA_adjacency_matrix(g):
 
             ### 比较节点i和节点j    
             same_node_i_j = [x for x in successors_i if x in successors_j]
-            
+
             ### 节点i和节点j中相同的节点的数量
             ### 如果节点i和节点j相同的节点的数量大于等于2，则符合层次化聚合的要求。
             if len(same_node_i_j) >1:
@@ -89,9 +89,9 @@ def get_HA_adjacency_matrix(g):
                 g.add_edge(src_list, dis_list)
                 ### 删除边
                 for ltemp in same_node_i_j:
-                    g.remove_edge(i, ltemp)
+                    g.remove_edges(i, ltemp)
                 for ltemp in same_node_i_j:
-                    g.remove_edge(j, ltemp)
+                    g.remove_edges(j, ltemp)
             else:
                 pass
         print("Node i-th finish....")

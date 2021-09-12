@@ -38,33 +38,38 @@ from gcn_mp import gcn_msg, gcn_reduce
 
 
 def get_HA_adjacency_matrix(g):
-    ### 获得原图g的邻接矩阵
-    g_adj = g.adjacency_matrix()
-    ### 打印原图g的邻接矩阵
-    print("original graph adjacency matrix:", g_adj)
-    num_adj = len(g_adj[0])
-
+    # ### 获得原图g的邻接矩阵
+    # g_adj = g.adjacency_matrix()
+    # ### 打印原图g的邻接矩阵
+    # print("original graph adjacency matrix:", g_adj)
+    # num_adj = len(g_adj[0])
+    num_node = g.number_of_nodes()
     Node_same_list = [[],[]]
-    for i in range(num_adj):
-        print("Node i-th start....")
-        temp_i = []     ### 存放i节点非零的节点编号，即节点i的目标节点
-        ### 获得节点i的目标节点
-        for a in range(num_adj):
-            if g_adj[i][a] == 0:
-                pass
-            else:
-                temp_i.append(a)
+    for i in range(num_node):
+        print("Node {0}-th start....".format(i))
+        # temp_i = []     ### 存放i节点非零的节点编号，即节点i的目标节点
+        # ### 获得节点i的目标节点
+        # for a in range(num_adj):
+        #     if g_adj[i][a] == 0:
+        #         pass
+        #     else:
+        #         temp_i.append(a)
+        successors_i = g.successors(i)
 
-        for j in range((i+1), num_adj):
-            temp_j = []      ### 存放j节点非零的节点编号，即节点j的目标节点
-            ### 获得节点j的目标节点
-            for b in range(num_adj):
-                if g_adj[j][b] == 0:                
-                    pass
-                else:
-                    temp_j.append(b)
+        for j in range((i+1), num_node):
+            # temp_j = []      ### 存放j节点非零的节点编号，即节点j的目标节点
+            # ### 获得节点j的目标节点
+            # for b in range(num_adj):
+            #     if g_adj[j][b] == 0:                
+            #         pass
+            #     else:
+            #         temp_j.append(b)
+
+            successors_j = g.successors(j)
+
             ### 比较节点i和节点j    
-            same_node_i_j = [x for x in temp_i if x in temp_j]
+            same_node_i_j = [x for x in successors_i if x in successors_j]
+            
             ### 节点i和节点j中相同的节点的数量
             ### 如果节点i和节点j相同的节点的数量大于等于2，则符合层次化聚合的要求。
             if len(same_node_i_j) >1:

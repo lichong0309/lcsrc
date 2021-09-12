@@ -69,6 +69,7 @@ def get_HA_adjacency_matrix(g):
 
             ### 比较节点i和节点j    
             same_node_i_j = [x for x in successors_i if x in successors_j]
+            print("same_Node_i_j:", same_node_i_j)
 
             ### 节点i和节点j中相同的节点的数量
             ### 如果节点i和节点j相同的节点的数量大于等于2，则符合层次化聚合的要求。

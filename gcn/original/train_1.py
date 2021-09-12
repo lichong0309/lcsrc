@@ -81,7 +81,7 @@ def get_HA_adjacency_matrix(g):
                 dis_list = same_node_i_j
                 for ltemp in range(len(dis_list)):
                     src_list.append(w)
-                g.add_edge([src_list, dis_list])
+                g.add_edge(src_list, dis_list)
                 ### 删除边
                 for ltemp in same_node_i_j:
                     g.remove_edge(i, ltemp)

@@ -7,6 +7,7 @@ import dgl
 # from dgl.data import CoraGraphDataset, CiteseerGraphDataset, PubmedGraphDataset
 from dgl.data import CoraGraphDataset, CiteseerGraphDataset, PubmedGraphDataset, RedditDataset, PPIDataset, GINDataset, TUDataset
 # from dgl import DGLGraph
+from dgl.data.utils import save_graphs
 
 from gcn import GCN
 #from gcn_mp import GCN
@@ -272,6 +273,8 @@ def main(args):
         print("Node i-th finish....")
     # g = get_HA_adjacency_matrix(g)
 
+
+    save_graphs("./data_{}.bin".format(args.dataset),[g])
     # 获得层次化聚合的子图
     node_num_1 = g.number_of_nodes()
     nid_1 = range(node_num, node_num_1)
@@ -280,13 +283,15 @@ def main(args):
     nid_2 = range(node_num)
     g_2 = g.subgraph(nid_2)
 
-
+    features_1 = g_1.ndata['feat']
+    features_2 = g_2.ndata['feat']
+    
     g_1.update_all(gcn_msg, gcn_reduce)
     g_2.update_all(gcn_msg, gcn_reduce)
 
-    features = g_2.ndata['feat']
+    
     weight = nn.Parameter(torch.Tensor(in_feats, 16))
-    g.ndata['h'] = torch.mm(features, weight)
+    g.ndata['h'] = torch.mm(features_2, weight)
     print("finish ...")
 
 

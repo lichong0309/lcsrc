@@ -14,17 +14,43 @@ import torch.nn.functional as F
 import dgl
 from dgl.data import register_data_args
 from dgl.data import CoraGraphDataset, CiteseerGraphDataset, PubmedGraphDataset
+import time
 
 
+# # 消息传递
+# def gcn_msg(edge):
+#     t0 = time.time()
+#     print("message passing test")
+#     msg = edge.src['h'] * edge.src['norm']
+#     t1 = time.time()
+#     t = t1 - t0
+#     print("message passing time:", t)
+#     return {'m': msg}
+
+# # 聚合邻居节点的特征
+# t_all = 0.0
+# def gcn_reduce(node):
+#     global t_all
+#     t0 = time.time()
+#     accum = torch.sum(node.mailbox['m'], 1) * node.data['norm']
+#     t1 = time.time()
+#     t_all = t1 - t0 + t_all
+#     print("aggregation time:", t_all)
+#     return {'h': accum}
+
+
+
+# 消息传递
 def gcn_msg(edge):
+    print("message passing test")
     msg = edge.src['h'] * edge.src['norm']
     return {'m': msg}
 
+# 聚合邻居节点的特征
 
 def gcn_reduce(node):
     accum = torch.sum(node.mailbox['m'], 1) * node.data['norm']
     return {'h': accum}
-
 
 class NodeApplyModule(nn.Module):
     def __init__(self, out_feats, activation=None, bias=True):
@@ -53,6 +79,8 @@ class NodeApplyModule(nn.Module):
 class GCNLayer(nn.Module):
     def __init__(self,
                  g,
+                 g_1,
+                 g_2,
                  in_feats,
                  out_feats,
                  activation,
@@ -60,6 +88,8 @@ class GCNLayer(nn.Module):
                  bias=True):
         super(GCNLayer, self).__init__()
         self.g = g
+        self.g_1 = g_1
+        self.g_2 = g_2
         self.weight = nn.Parameter(torch.Tensor(in_feats, out_feats))
         if dropout:
             self.dropout = nn.Dropout(p=dropout)
@@ -72,23 +102,52 @@ class GCNLayer(nn.Module):
         stdv = 1. / math.sqrt(self.weight.size(1))
         self.weight.data.uniform_(-stdv, stdv)
 
+    # def forward(self, h):
+    #     self.g.ndata['h'] = h
+    #     if self.dropout:
+    #         h = self.dropout(h)
+    #     # self.g.ndata['h'] = torch.mm(h, self.weight)
+    #     # self.g.update_all(gcn_msg, gcn_reduce, self.node_update)
+    #     t0 = time.time()
+    #     self.g.update_all(gcn_msg, gcn_reduce)     # aggreation
+    #     t1 = time.time()
+    #     t = t1 - t0
+    #     print("aggreation time:", t)
+
+    #     t_update_0 = time.time()
+    #     self.g.ndata['h'] = torch.mm(h, self.weight)   # update
+    #     self.g.apply_nodes(func = self.node_update)     # 激活函数
+        
+    #     t_update_1 = time.time()
+    #     t_update = t_update_1 - t_update_0
+    #     print("update time:", t_update)
+
+
+    #     h = self.g.ndata.pop('h')
+    #     return h
+
     def forward(self, h):
         if self.dropout:
             self.h = self.dropout(h)
         self.g.ndata['h'] = h
 
-        self.g.update_all(gcn_msg, gcn_reduce)
 
-        self.g.ndata['h'] = torch.mm(h, self.weight)
-        self.g.apply_nodes(func=self.node_update)
+        self.g_1.update_all(gcn_msg, gcn_reduce)
+        self.g_2.update_all(gcn_msg, gcn_reduce)
+
+        self.g_2.ndata['h'] = torch.mm(h, self.weight)
+        self.g_2.apply_nodes(func=self.node_update)
         # self.g.update_all(gcn_msg, gcn_reduce, self.node_update)
 
-        h = self.g.ndata.pop('h')
+        h = self.g_2.ndata.pop('h')
         return h
+
 
 class GCN(nn.Module):
     def __init__(self,
                  g,
+                 g_1,
+                 g_2,
                  in_feats,
                  n_hidden,
                  n_classes,
@@ -98,12 +157,13 @@ class GCN(nn.Module):
         super(GCN, self).__init__()
         self.layers = nn.ModuleList()
         # input layer
-        self.layers.append(GCNLayer(g, in_feats, n_hidden, activation, dropout))
+        self.layers.append(GCNLayer(g, g_1, g_2, in_feats, n_hidden, activation, dropout))
+        print("test GCN")
         # hidden layers
         for i in range(n_layers - 1):
-            self.layers.append(GCNLayer(g, n_hidden, n_hidden, activation, dropout))
+            self.layers.append(GCNLayer(g, g_1, g_2, n_hidden, n_hidden, activation, dropout))
         # output layer
-        self.layers.append(GCNLayer(g, n_hidden, n_classes, None, dropout))
+        # self.layers.append(GCNLayer(g, g_1, g_2, n_hidden, n_classes, None, dropout))
 
     def forward(self, features):
         h = features

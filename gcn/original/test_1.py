@@ -1,5 +1,4 @@
 import argparse
-from original.gcn_mp_1 import GCN_1
 import time
 import numpy as np
 import torch

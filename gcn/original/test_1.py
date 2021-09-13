@@ -340,7 +340,9 @@ def main(args):
     dur = []
     for epoch in range(args.n_epochs):
         model_1.train()
+
         logits_1 = model_1(features)
+
         model.train()
         start_time = time.time()
         logits = model(features)

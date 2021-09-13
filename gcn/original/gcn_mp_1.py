@@ -78,12 +78,21 @@ class GCNLayer(nn.Module):
         if self.dropout:
             self.h = self.dropout(h)
         self.g.ndata['h'] = h
-
+        
+        t0 = time.time()
         self.g.update_all(gcn_msg, gcn_reduce)
+        t1 = time.time()
+        t = t1 - t0
+        print("aggregation time 2:", t)
 
+
+        t0 = time.time()
         self.g.ndata['h'] = torch.mm(h, self.weight)
         self.g.apply_nodes(func=self.node_update)
+        t1 = time.time()
         # self.g.update_all(gcn_msg, gcn_reduce, self.node_update)
+        t = t1 - t0
+        print("update time:", t)
 
         h = self.g.ndata.pop('h')
         return h
@@ -103,7 +112,11 @@ class GCNLayer_1(nn.Module):
 
     def forward(self, h):
         self.g.ndata['h'] = h
+        t0 = time.time()
         self.g.update_all(gcn_msg, gcn_reduce)
+        t1 = time.time()
+        t = t1 - t0
+        print("aggregation time 1:", t)
         return h
 
 class GCN(nn.Module):

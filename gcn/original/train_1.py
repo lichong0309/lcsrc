@@ -290,13 +290,14 @@ def main(args):
 
     features_1 = g_1.ndata['feat']
     features_2 = g_2.ndata['feat']
+    features = g.ndata['feat']
     
-    g_1.update_all(gcn_msg, gcn_reduce)
-    g_2.update_all(gcn_msg, gcn_reduce)
+    # g_1.update_all(gcn_msg, gcn_reduce)
+    g.update_all(gcn_msg, gcn_reduce)
 
     
     weight = nn.Parameter(torch.Tensor(in_feats, 16))
-    g.ndata['h'] = torch.mm(features_2, weight)
+    g.ndata['h'] = torch.mm(features, weight)
     print("finish ...")
 
 

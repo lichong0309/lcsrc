@@ -10,8 +10,8 @@ from dgl.data import CoraGraphDataset, CiteseerGraphDataset, PubmedGraphDataset,
 from dgl.data.utils import save_graphs, load_graphs
 from dgl import node_subgraph
 
-from gcn import GCN
-#from gcn_mp import GCN
+# from gcn import GCN
+from gcn_mp_1 import GCN
 #from gcn_spmv import GCN
 import torch.autograd
 import torch.nn as nn

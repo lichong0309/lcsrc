@@ -2,8 +2,8 @@
 import matplotlib.pyplot as plt
  
 name_list = ['Cora','Citeser','Pubmed','PPI']
-num_list = [2.598, 1.840, 5.412817, 6.7496]
-num_list1 = [38.239, 41.9316, 95.9949, 63.475]
+num_list = [30.7705, 73.1086, 90.2736, 26.603]
+num_list1 = [37.753, 97.269, 109.840, 27.76575]
 x =list(range(len(num_list)))
 total_width, n = 0.8, 2
 width = total_width / n

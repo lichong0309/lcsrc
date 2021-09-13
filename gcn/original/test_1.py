@@ -309,7 +309,7 @@ def main(args):
                                  weight_decay=args.weight_decay)
 
 
-    model_1 = GCN(g_1,
+    model_1 = GCN_1(g_1,
             in_feats,
             args.n_hidden,
             n_classes,

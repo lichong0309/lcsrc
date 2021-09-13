@@ -8,6 +8,7 @@ import dgl
 from dgl.data import CoraGraphDataset, CiteseerGraphDataset, PubmedGraphDataset, RedditDataset, PPIDataset, GINDataset, TUDataset
 # from dgl import DGLGraph
 from dgl.data.utils import save_graphs, load_graphs
+from dgl import node_subgraph
 
 from gcn import GCN
 #from gcn_mp import GCN
@@ -199,7 +200,7 @@ def main(args):
 
 
     nid = range(10)
-    g = g.dgl.node_subgraph(nid)
+    g = dgl.node_subgraph(g, nid)
     g.update_all(gcn_msg, gcn_reduce)
     node_num = g.number_of_nodes()
     print("node_num:",node_num)

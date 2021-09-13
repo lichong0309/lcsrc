@@ -201,6 +201,7 @@ def main(args):
     nid = range(10)
     g = g.subgraph(nid)
     node_num = g.number_of_nodes()
+    print("node_num:",node_num)
 
 
 
@@ -280,6 +281,7 @@ def main(args):
     
     # 获得层次化聚合的子图
     node_num_1 = g.number_of_nodes()
+    print("node_num_1", node_num_1)
     nid_1 = range(node_num, node_num_1)
     g_1 = g.subgraph(nid_1)
 
@@ -289,7 +291,7 @@ def main(args):
     features_1 = g_1.ndata['feat']
     features_2 = g_2.ndata['feat']
     
-    # g_1.update_all(gcn_msg, gcn_reduce)
+    g_1.update_all(gcn_msg, gcn_reduce)
     g_2.update_all(gcn_msg, gcn_reduce)
 
     

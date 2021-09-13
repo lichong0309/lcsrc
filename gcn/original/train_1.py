@@ -200,6 +200,7 @@ def main(args):
 
     nid = range(10)
     g = g.subgraph(nid)
+    g.update_all(gcn_msg, gcn_reduce)
     node_num = g.number_of_nodes()
     print("node_num:",node_num)
 

@@ -322,14 +322,12 @@ def main(args):
             edge_id = g.edge_ids(j, i)
             edge_subgraph_list_2.append(edge_id)
     g_2 = dgl.edge_subgraph(g, edge_subgraph_list_2, preserve_nodes=True)
-    print("features test:",g_1.ndata['feat'])
-    print("features test:",g_2.ndata['feat'])
+    # print("features test:",g_1.ndata['feat'])
+    # print("features test:",g_2.ndata['feat'])
 
 
 
-
-
-    h = g.ndata['feat']
+    h = g.ndata['h']
     
     g_1.update_all(gcn_msg, gcn_reduce)
     g_2.update_all(gcn_msg, gcn_reduce)

@@ -7,7 +7,7 @@ import dgl
 # from dgl.data import CoraGraphDataset, CiteseerGraphDataset, PubmedGraphDataset
 from dgl.data import CoraGraphDataset, CiteseerGraphDataset, PubmedGraphDataset, RedditDataset, PPIDataset, GINDataset, TUDataset
 # from dgl import DGLGraph
-from dgl.data.utils import save_graphs
+from dgl.data.utils import save_graphs, load_graphs
 
 from gcn import GCN
 #from gcn_mp import GCN
@@ -198,6 +198,8 @@ def main(args):
                                  weight_decay=args.weight_decay)
 
 
+    nid = range(10)
+    g = g.subgraph(nid)
     node_num = g.number_of_nodes()
 
 
@@ -274,7 +276,8 @@ def main(args):
     # g = get_HA_adjacency_matrix(g)
 
 
-    save_graphs("./data_{}.bin".format(args.dataset),[g])
+    # save_graphs("./data_{}.bin".format(args.dataset),[g])
+    
     # 获得层次化聚合的子图
     node_num_1 = g.number_of_nodes()
     nid_1 = range(node_num, node_num_1)

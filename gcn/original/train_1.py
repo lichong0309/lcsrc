@@ -296,6 +296,16 @@ def main(args):
 
     node_num_1 = g.number_of_nodes()
     print("node_num_1", node_num_1)
+
+    # normalization
+    degs = g.in_degrees().float()
+    norm = torch.pow(degs, -0.5)
+    norm[torch.isinf(norm)] = 0
+    if cuda:
+        norm = norm.to(device)
+    g.ndata['norm'] = norm.unsqueeze(1)
+
+
     ### 搜索层次化聚合的子图的节点
     edge_subgraph_list_1 = []
     for i in range(node_num, node_num_1):
@@ -303,7 +313,7 @@ def main(args):
         for j in predecessors_list_i:
             edge_id = g.edge_ids(j, i)                      # 获得节点编号
             edge_subgraph_list_1.append(edge_id)
-    g_1 = dgl.edge_subgraph(g, edge_subgraph_list_1)
+    g_1 = dgl.edge_subgraph(g, edge_subgraph_list_1, preserve_nodes=True)
 
     edge_subgraph_list_2 = []
     for i in range(node_num):
@@ -311,16 +321,16 @@ def main(args):
         for j in predecessors_list_i:
             edge_id = g.edge_ids(j, i)
             edge_subgraph_list_2.append(edge_id)
-    g_2 = dgl.edge_subgraph(g, edge_subgraph_list_2)
+    g_2 = dgl.edge_subgraph(g, edge_subgraph_list_2, preserve_nodes=True)
 
 
 
 
 
-    
+    features_2 = g_2.ndata['feat']
     g_1.update_all(gcn_msg, gcn_reduce)
     g_2.update_all(gcn_msg, gcn_reduce)
-    features_2 = g_2.ndata['feat']
+    
 
     
     weight = nn.Parameter(torch.Tensor(in_feats, 16))

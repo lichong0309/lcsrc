@@ -17,12 +17,14 @@ from dgl.data import CoraGraphDataset, CiteseerGraphDataset, PubmedGraphDataset
 
 
 def gcn_msg(edge):
-    msg = edge.src['h'] * edge.src['norm']
+    # msg = edge.src['h'] * edge.src['norm']
+    msg = edge.src['h']
     return {'m': msg}
 
 
 def gcn_reduce(node):
-    accum = torch.sum(node.mailbox['m'], 1) * node.data['norm']
+    # accum = torch.sum(node.mailbox['m'], 1) * node.data['norm']
+    accum = torch.sum(node.mailbox['m'], 1) 
     return {'h': accum}
 
 

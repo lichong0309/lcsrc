@@ -20,25 +20,6 @@ from gcn_mp import gcn_msg, gcn_reduce
 
 
 
-
-# def HAggGenerateGraph(g):
-#     ### 获得原图g的邻接矩阵
-#     g_adj = g.DGLGraph.adjacency_matrix()
-#     ### 打印原图g的邻接矩阵
-#     print("original graph adjacency matrix:", g_adj)
-
-#     ### 获得HAggregation的邻接矩阵
-#     gHA_adjacency_matrix = get_HA_adjacency_matrix(g_adj)
-
-#     ### 构建新图 gHA
-    
-#     ### 更新原图g
-
-
-#     return gHA, g
-
-
-
 def get_HA_adjacency_matrix(g):
     # ### 获得原图g的邻接矩阵
     # g_adj = g.adjacency_matrix()

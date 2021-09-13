@@ -6,8 +6,8 @@ import torch.nn.functional as F
 import dgl
 from dgl.data import CoraGraphDataset, CiteseerGraphDataset, PubmedGraphDataset
 
-from gcn import GCN
-#from gcn_mp import GCN
+# from gcn import GCN
+from gcn_mp import GCN
 #from gcn_spmv import GCN
 import torch.autograd
 
@@ -76,6 +76,9 @@ def main(args):
         print("cuda test_1....")
         norm = norm.cuda()
     g.ndata['norm'] = norm.unsqueeze(1)
+    nit= range(1,100)
+    g = g.subgraph(nit)
+    
 
     # create GCN model
     model = GCN(g,

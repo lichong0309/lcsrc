@@ -289,7 +289,7 @@ def main(args):
     features_1 = g_1.ndata['feat']
     features_2 = g_2.ndata['feat']
     
-    g_1.update_all(gcn_msg, gcn_reduce)
+    # g_1.update_all(gcn_msg, gcn_reduce)
     g_2.update_all(gcn_msg, gcn_reduce)
 
     

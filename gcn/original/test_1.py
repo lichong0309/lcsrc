@@ -1,4 +1,5 @@
 import argparse
+from original.gcn_mp_1 import GCN_1
 import time
 import numpy as np
 import torch
@@ -11,7 +12,7 @@ from dgl.data.utils import save_graphs, load_graphs
 from dgl import node_subgraph
 
 # from gcn import GCN
-from gcn_mp_1 import GCN
+from gcn_mp_1 import GCN, GCN_1
 #from gcn_spmv import GCN
 import torch.autograd
 import torch.nn as nn
@@ -292,13 +293,8 @@ def main(args):
     features = g.ndata['feat']
 
 
-
-
-
     # create GCN model
-    model = GCN(g,
-                g_1,
-                g_2,
+    model = GCN(g_2,
                 in_feats,
                 args.n_hidden,
                 n_classes,
@@ -312,13 +308,28 @@ def main(args):
     optimizer = torch.optim.Adam(model.parameters(),
                                  lr=args.lr,
                                  weight_decay=args.weight_decay)
+
+
+    model_1 = GCN(g_1,
+            in_feats,
+            args.n_hidden,
+            n_classes,
+            args.n_layers,
+            F.relu,
+            args.dropout)
+
+    loss_fcn = torch.nn.CrossEntropyLoss()
+
+    # use optimizer
+    optimizer = torch.optim.Adam(model.parameters(),
+                                 lr=args.lr,
+                                 weight_decay=args.weight_decay)
+
+
+
     # h = g.ndata['h']
-    
     # g_1.update_all(gcn_msg, gcn_reduce)
     # g_2.update_all(gcn_msg, gcn_reduce)
-    
-
-    
     # weight = nn.Parameter(torch.Tensor(in_feats, 16))
     # g_2.ndata['h'] = torch.mm(h, weight)
     # print("finish ...")
@@ -329,29 +340,11 @@ def main(args):
     # initialize graph
     dur = []
     for epoch in range(args.n_epochs):
+        model_1.train()
+        logits_1 = model_1(features)
         model.train()
         start_time = time.time()
-        # if epoch >= 3:
-        #     t0 = time.time()
-        # forward
         logits = model(features)
-        # loss = loss_fcn(logits[train_mask], labels[train_mask])
-
-        # optimizer.zero_grad()
-        # loss.backward()
-        # optimizer.step()
-
-        # if epoch >= 3:
-        #     dur.append(time.time() - t0)
-
-        # acc = evaluate(model, features, labels, val_mask)
-        # print("Epoch {:05d} | Time(s) {:.4f} | Loss {:.4f} | Accuracy {:.4f} | "
-        #       "ETputs(KTEPS) {:.2f}". format(epoch, np.mean(dur), loss.item(),
-        #                                      acc, n_edges / np.mean(dur) / 1000))
-
-    # print()
-    # acc = evaluate(model, features, labels, test_mask)
-    # print("Test accuracy {:.2%}".format(acc))
         print("forward finishing...")
         fin_time = time.time()
         epoch_time = fin_time - start_time

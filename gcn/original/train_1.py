@@ -199,9 +199,9 @@ def main(args):
                                  weight_decay=args.weight_decay)
 
 
-    nid = range(10)
-    g = dgl.node_subgraph(g, nid)
-    g.update_all(gcn_msg, gcn_reduce)
+    # nid = range(10)
+    # g = dgl.node_subgraph(g, nid)
+    # g.update_all(gcn_msg, gcn_reduce)
     node_num = g.number_of_nodes()
     print("node_num:",node_num)
 
@@ -281,21 +281,46 @@ def main(args):
 
     # save_graphs("./data_{}.bin".format(args.dataset),[g])
     
-    # 获得层次化聚合的子图
+    # # 获得层次化聚合的子图
+    # node_num_1 = g.number_of_nodes()
+    # print("node_num_1", node_num_1)
+    # nid_1 = range(node_num, node_num_1)
+    # g_1 = g.subgraph(nid_1)
+
+    # nid_2 = range(node_num)
+    # g_2 = g.subgraph(nid_2)
+
+    # features_1 = g_1.ndata['feat']
+    # features_2 = g_2.ndata['feat']
+    # features = g.ndata['feat']
+
     node_num_1 = g.number_of_nodes()
     print("node_num_1", node_num_1)
-    nid_1 = range(node_num, node_num_1)
-    g_1 = g.subgraph(nid_1)
+    ### 搜索层次化聚合的子图的节点
+    edge_subgraph_list_1 = []
+    for i in range(node_num, node_num_1):
+        predecessors_list_i = g.predecessors(i)             # 获得前继节点
+        for j in predecessors_list_i:
+            edge_id = g.edge_ids(i, j)                      # 获得节点编号
+            edge_subgraph_list_1.append(edge_id)
+    g_1 = dgl.edge_subgraph(g, edge_subgraph_list_1)
 
-    nid_2 = range(node_num)
-    g_2 = g.subgraph(nid_2)
+    edge_subgraph_list_2 = []
+    for i in range(node_num):
+        predecessors_list_i = g.predecessors(i)
+        for j in predecessors_list_i:
+            edge_id = g.edge_ids(i, j)
+            edge_subgraph_list_2.append(edge_id)
+    g_2 = dgl.edge_subgraph(g, edge_subgraph_list_2)
 
-    features_1 = g_1.ndata['feat']
-    features_2 = g_2.ndata['feat']
-    features = g.ndata['feat']
+
+
+
+
     
-    # g_1.update_all(gcn_msg, gcn_reduce)
-    g.update_all(gcn_msg, gcn_reduce)
+    g_1.update_all(gcn_msg, gcn_reduce)
+    g_2.update_all(gcn_msg, gcn_reduce)
+    features_2 = g_2.ndata['feat']
 
     
     weight = nn.Parameter(torch.Tensor(in_feats, 16))

@@ -107,7 +107,7 @@ class GCNLayer_1(nn.Module):
                  activation,
                  dropout,
                  bias=True):
-        super(GCNLayer, self).__init__()
+        super(GCNLayer_1, self).__init__()
         self.g = g
 
     def forward(self, h):
@@ -155,7 +155,7 @@ class GCN_1(nn.Module):
                  n_layers,
                  activation,
                  dropout):
-        super(GCN, self).__init__()
+        super(GCN_1, self).__init__()
         self.layers = nn.ModuleList()
         # input layer
         self.layers.append(GCNLayer_1(g, in_feats, n_hidden, activation, dropout))

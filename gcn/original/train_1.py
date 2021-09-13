@@ -301,7 +301,7 @@ def main(args):
     for i in range(node_num, node_num_1):
         predecessors_list_i = g.predecessors(i)             # 获得前继节点
         for j in predecessors_list_i:
-            edge_id = g.edge_ids(i, j)                      # 获得节点编号
+            edge_id = g.edge_ids(j, i)                      # 获得节点编号
             edge_subgraph_list_1.append(edge_id)
     g_1 = dgl.edge_subgraph(g, edge_subgraph_list_1)
 
@@ -309,7 +309,7 @@ def main(args):
     for i in range(node_num):
         predecessors_list_i = g.predecessors(i)
         for j in predecessors_list_i:
-            edge_id = g.edge_ids(i, j)
+            edge_id = g.edge_ids(j, i)
             edge_subgraph_list_2.append(edge_id)
     g_2 = dgl.edge_subgraph(g, edge_subgraph_list_2)
 

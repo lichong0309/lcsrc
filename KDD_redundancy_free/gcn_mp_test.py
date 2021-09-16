@@ -119,7 +119,12 @@ class GCNLayer(nn.Module):
         print("aggreation time:", t)
 
 
+        t0 = time.time()
         self.g.apply_nodes(func = self.node_update)     # 激活函数
+        t1 = time.time()
+        t = t1 - t0
+        print("update time:", t)
+
 
         h = self.g.ndata.pop('h')
         return h

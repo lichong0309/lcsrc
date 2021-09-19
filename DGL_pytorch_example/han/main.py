@@ -30,12 +30,10 @@ def main(args):
     # 得到数据集 和 graph ：g
     g, features, labels, num_classes, train_idx, val_idx, test_idx, train_mask, \
     val_mask, test_mask = load_data(args['dataset'])
-    g = dgl.heterograph(g)
-    n_node = g.number_of_nodes()
-    n_edge = g.number_of_edges()
-    print("node:", n_node)
-    print("edge:", n_edge)
-
+    print("g:",g)
+    meta_paths=[['pa', 'ap']]
+    new_g = dgl.metapath_reachable_graph(g, meta_paths)
+    print("test...")
 
     if hasattr(torch, 'BoolTensor'):
         train_mask = train_mask.bool()

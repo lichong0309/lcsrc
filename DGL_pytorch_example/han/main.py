@@ -26,8 +26,14 @@ def evaluate(model, g, features, labels, mask, loss_func):
 def main(args):
     # If args['hetero'] is True, g would be a heterogeneous graph.
     # Otherwise, it will be a list of homogeneous graphs.
+    # 得到数据集 和 graph ：g
     g, features, labels, num_classes, train_idx, val_idx, test_idx, train_mask, \
     val_mask, test_mask = load_data(args['dataset'])
+    n_node = g.number_of_nodes()
+    n_edge = g.number_of_edges()
+    print("node:", n_node)
+    print("edge:", n_edge)
+
 
     if hasattr(torch, 'BoolTensor'):
         train_mask = train_mask.bool()

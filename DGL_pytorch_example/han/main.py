@@ -31,7 +31,6 @@ def main(args):
     g, features, labels, num_classes, train_idx, val_idx, test_idx, train_mask, \
     val_mask, test_mask = load_data(args['dataset'])
     print("g:",g)
-    g = g[0]
     n_num = g.number_of_edges()
     print("test_num:", n_num)
 

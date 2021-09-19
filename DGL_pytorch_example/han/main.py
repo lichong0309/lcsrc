@@ -31,10 +31,8 @@ def main(args):
     g, features, labels, num_classes, train_idx, val_idx, test_idx, train_mask, \
     val_mask, test_mask = load_data(args['dataset'])
     print("g:",g)
-    meta_paths=[['pa', 'ap']]
-    new_g = dgl.metapath_reachable_graph(g, meta_paths)
-    print("test...")
 
+    
     if hasattr(torch, 'BoolTensor'):
         train_mask = train_mask.bool()
         val_mask = val_mask.bool()

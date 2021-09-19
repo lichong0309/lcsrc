@@ -10,8 +10,8 @@ from dgl.data import CoraGraphDataset, CiteseerGraphDataset, PubmedGraphDataset,
 from dgl.data.utils import save_graphs, load_graphs
 from dgl import node_subgraph
 
-from gcn import GCN
-#from gcn_mp import GCN
+# from gcn import GCN
+from gcn_mp import GCN
 #from gcn_spmv import GCN
 import torch.autograd
 import torch.nn as nn
@@ -324,6 +324,8 @@ def main(args):
     g_2 = dgl.edge_subgraph(g, edge_subgraph_list_2, preserve_nodes=True)
     # print("features test:",g_1.ndata['feat'])
     # print("features test:",g_2.ndata['feat'])
+
+
 
 
 

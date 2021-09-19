@@ -6,7 +6,7 @@ from sklearn.preprocessing import normalize
 from sklearn.metrics import f1_score
 import scipy.sparse as sp
 from collections import defaultdict
-from sklearn.metrics import accuracy_score,roc_auc_score,average_precision_score,precision_score,jaccard_similarity_score,recall_score,zero_one_loss
+from sklearn.metrics import accuracy_score,roc_auc_score,average_precision_score,precision_score,jaccard_score,recall_score,zero_one_loss
 
 
 import torch

@@ -1,5 +1,6 @@
 import torch
 from sklearn.metrics import f1_score
+import dgl
 
 from utils import load_data, EarlyStopping
 
@@ -29,6 +30,7 @@ def main(args):
     # 得到数据集 和 graph ：g
     g, features, labels, num_classes, train_idx, val_idx, test_idx, train_mask, \
     val_mask, test_mask = load_data(args['dataset'])
+    g = dgl.heterograph(g)
     n_node = g.number_of_nodes()
     n_edge = g.number_of_edges()
     print("node:", n_node)

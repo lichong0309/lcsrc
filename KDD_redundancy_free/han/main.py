@@ -3,6 +3,7 @@ from sklearn.metrics import f1_score
 import dgl
 
 from utils import load_data, EarlyStopping
+import time
 
 def score(logits, labels):
     _, indices = torch.max(logits, dim=1)
@@ -23,6 +24,15 @@ def evaluate(model, g, features, labels, mask, loss_func):
     accuracy, micro_f1, macro_f1 = score(logits[mask], labels[mask])
 
     return loss, accuracy, micro_f1, macro_f1
+
+# def aggregation_computation(tensor_1, tensor_2, tensor_3):
+#     t0 = time.time()
+#     t1 = time.time()
+#     t = t1 - t0
+
+#     return t, tensor
+def g_metapath_instance(g, meta_paths):
+    pass
 
 def main(args):
     # If args['hetero'] is True, g would be a heterogeneous graph.
@@ -54,6 +64,8 @@ def main(args):
                     num_heads=args['num_heads'],
                     dropout=args['dropout']).to(args['device'])
         g = dgl.to_homogeneous(g)
+        g.ndata['x'] = features 
+        print("test:",g)
         print("test finsh...")
         g = g.to(args['device'])
 
@@ -66,6 +78,9 @@ def main(args):
                     num_heads=args['num_heads'],
                     dropout=args['dropout']).to(args['device'])
         g = [graph.to(args['device']) for graph in g]
+
+
+
 
     stopper = EarlyStopping(patience=args['patience'])
     loss_fcn = torch.nn.CrossEntropyLoss()

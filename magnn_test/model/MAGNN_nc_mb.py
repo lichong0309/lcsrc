@@ -1,6 +1,7 @@
 import torch
 import torch.nn as nn
 import numpy as np
+import time
 
 from model.base_MAGNN import MAGNN_ctr_ntype_specific
 
@@ -108,6 +109,10 @@ class MAGNN_nc_mb(nn.Module):
         transformed_features = self.feat_drop(transformed_features)
 
         # hidden layers
+        t0 = time.time()
         logits, h = self.layer1((g_list, transformed_features, type_mask, edge_metapath_indices_list, target_idx_list))
+        t1 = time.time()
+        t = t1 - t0
+        print("update time:",t)
 
         return logits, h

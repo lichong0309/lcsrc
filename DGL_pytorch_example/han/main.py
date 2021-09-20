@@ -34,7 +34,7 @@ def main(args):
     print("g:",g)
     n_num = g.number_of_edges()
     print("test_num:", n_num)
-    print("test:",g.ndata['h'])
+    print("test:",g.ndata[0])
 
 
     if hasattr(torch, 'BoolTensor'):

@@ -5,7 +5,7 @@ import dgl.function as fn
 from dgl.nn.pytorch import edge_softmax
 import time
 
-
+t = 0.0
 class MAGNN_metapath_specific(nn.Module):
     def __init__(self,
                  etypes,
@@ -178,7 +178,9 @@ class MAGNN_metapath_specific(nn.Module):
         # unnormalized attention values.
         g.update_all(self.message_passing, fn.sum('ft', 'ft'))
         t1 = time.time()
-        t = t1 - t0
+        t_temp = t1 - t0
+        global t 
+        t = t + t_temp
         print("time:", t)
         ret = g.ndata['ft']  # E x num_heads x out_dim
 

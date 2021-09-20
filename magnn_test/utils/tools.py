@@ -162,14 +162,14 @@ def parse_minibatch(adjlists, edge_metapath_indices_list, idx_batch, device, sam
                     ##### Node_same_list: [[1,3,4],[2,4,6]],表示1和2，3和4，4和6可以层次化聚合
 
                     ### 添加新的节点w，邻居节点：i，j，目标节点same_node_i_j
-                    # g.add_nodes(1)      #### 添加节点
-                    # w = g.number_of_nodes()   ### 添加节点的编号
-                    # g.add_edges([i,j],[w,w])
-                    # src_list = []
-                    # dis_list = same_node_i_j
-                    # for ltemp in range(len(dis_list)):
-                    #     src_list.append(w)
-                    # g.add_edge(src_list, dis_list)
+                    g.add_nodes(1)      #### 添加节点
+                    w = g.number_of_nodes()   ### 添加节点的编号
+                    g.add_edges([i,j],[w,w])
+                    src_list = []
+                    dis_list = same_node_i_j
+                    for ltemp in range(len(dis_list)):
+                        src_list.append(w)
+                    g.add_edge(src_list, dis_list)
                     ### 删除边
                     for ltemp in same_node_i_j:
                         edge_id = g.edge_ids(i, ltemp)
@@ -184,8 +184,6 @@ def parse_minibatch(adjlists, edge_metapath_indices_list, idx_batch, device, sam
         #g.add_edges(*list(zip(*[(dst, src) for src, dst in sorted(edges)])))
         #result_indices = torch.LongTensor(result_indices).to(device)
         print("graph test:",g)
-
-        
         g_list.append(g)
         result_indices_list.append(result_indices)
         idx_batch_mapped_list.append(np.array([mapping[idx] for idx in idx_batch]))

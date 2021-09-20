@@ -118,9 +118,74 @@ def parse_minibatch(adjlists, edge_metapath_indices_list, idx_batch, device, sam
         else:
             result_indices = torch.LongTensor(result_indices).to(device)
         
+        # ### 获得原图g的邻接矩阵
+        # g_adj = g.adjacency_matrix()
+        # ### 打印原图g的邻接矩阵
+        # print("original graph adjacency matrix:", g_adj)
+        # num_adj = len(g_adj[0])
+        num_node = g.number_of_nodes()
+        print("num_node:", num_node)
+        Node_same_list = [[],[]]
+        for i in range(num_node):
+            print("Node {0}-th start....".format(i))
+            # temp_i = []     ### 存放i节点非零的节点编号，即节点i的目标节点
+            # ### 获得节点i的目标节点
+            # for a in range(num_adj):
+            #     if g_adj[i][a] == 0:
+            #         pass
+            #     else:
+            #         temp_i.append(a)
+            
+
+            for j in range((i+1), num_node):
+                successors_i = g.successors(i)              # 得到节点i的目标节点
+                # temp_j = []      ### 存放j节点非零的节点编号，即节点j的目标节点
+                # ### 获得节点j的目标节点
+                # for b in range(num_adj):
+                #     if g_adj[j][b] == 0:                
+                #         pass
+                #     else:
+                #         temp_j.append(b)
+
+                successors_j = g.successors(j)
+
+                ### 比较节点i和节点j    
+                same_node_i_j = [x for x in successors_i if x in successors_j]
+                print("same_Node_i_j:", same_node_i_j)
+
+                ### 节点i和节点j中相同的节点的数量
+                ### 如果节点i和节点j相同的节点的数量大于等于2，则符合层次化聚合的要求。
+                if len(same_node_i_j) >1:
+                    Node_same_list[0].append(i)
+                    Node_same_list[1].append(j)
+                    ##### 以上步骤获得 Node_same_list, same_node_i_j
+                    ##### Node_same_list: [[1,3,4],[2,4,6]],表示1和2，3和4，4和6可以层次化聚合
+
+                    ### 添加新的节点w，邻居节点：i，j，目标节点same_node_i_j
+                    # g.add_nodes(1)      #### 添加节点
+                    # w = g.number_of_nodes()   ### 添加节点的编号
+                    # g.add_edges([i,j],[w,w])
+                    # src_list = []
+                    # dis_list = same_node_i_j
+                    # for ltemp in range(len(dis_list)):
+                    #     src_list.append(w)
+                    # g.add_edge(src_list, dis_list)
+                    ### 删除边
+                    for ltemp in same_node_i_j:
+                        edge_id = g.edge_ids(i, ltemp)
+                        g.remove_edges(edge_id)
+                    for ltemp in same_node_i_j:
+                        edge_id = g.edge_ids(j, ltemp)
+                        g.remove_edges(edge_id)
+                else:
+                    pass
+            print("Node i-th finish....")
+
         #g.add_edges(*list(zip(*[(dst, src) for src, dst in sorted(edges)])))
         #result_indices = torch.LongTensor(result_indices).to(device)
         print("graph test:",g)
+
+        
         g_list.append(g)
         result_indices_list.append(result_indices)
         idx_batch_mapped_list.append(np.array([mapping[idx] for idx in idx_batch]))

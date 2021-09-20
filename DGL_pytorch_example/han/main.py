@@ -70,6 +70,7 @@ def main(args):
             num_classes,
             1,
             F.relu,
+            args['dropout']
             )
     else:
         from model import HAN

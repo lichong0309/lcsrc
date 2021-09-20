@@ -99,7 +99,8 @@ def setup(args):
     args.update(default_configure)
     set_random_seed(args['seed'])
     args['dataset'] = 'ACMRaw' if args['hetero'] else 'ACM'
-    args['device'] = 'cuda:0' if torch.cuda.is_available() else 'cpu'
+    # args['device'] = 'cuda:0' if torch.cuda.is_available() else 'cpu'
+    args['device'] = 'cpu'
     args['log_dir'] = setup_log_dir(args)
     return args
 

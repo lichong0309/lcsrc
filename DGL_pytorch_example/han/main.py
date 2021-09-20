@@ -3,8 +3,6 @@ from sklearn.metrics import f1_score
 import dgl
 
 from utils import load_data, EarlyStopping
-from gcn_mp_1 import GCN_1
-import torch.nn.functional as F
 
 def score(logits, labels):
     _, indices = torch.max(logits, dim=1)
@@ -36,7 +34,7 @@ def main(args):
     print("g:",g)
     n_num = g.number_of_edges()
     print("test_num:", n_num)
-    print("test:",g.ndata[0])
+
 
 
     if hasattr(torch, 'BoolTensor'):
@@ -56,27 +54,15 @@ def main(args):
 
     
     if args['hetero']:
-        # from model_hetero import HAN
-        # model = HAN(meta_paths=meta_paths,
-        #             in_size=features.shape[1],
-        #             hidden_size=args['hidden_units'],
-        #             out_size=num_classes,
-        #             num_heads=args['num_heads'],
-        #             dropout=args['dropout']).to(args['device'])
-        # g = g.to(args['device'])
-        model = GCN_1(g,
-            features.shape[1],
-            args['hidden_units'],
-            num_classes,
-            1,
-            F.relu,
-            args['dropout']
-            )
-        model.train()
-
-        logits_1 = model(features)
-
-        model.train()
+        from model_hetero import HAN
+        model = HAN(meta_paths=meta_paths,
+                    in_size=features.shape[1],
+                    hidden_size=args['hidden_units'],
+                    out_size=num_classes,
+                    num_heads=args['num_heads'],
+                    dropout=args['dropout']).to(args['device'])
+        g = g.to(args['device'])
+        g = dgl.to_homogeneous(g,ndata=['h'])
         print("test finsh...")
     else:
         from model import HAN
@@ -88,35 +74,35 @@ def main(args):
                     dropout=args['dropout']).to(args['device'])
         g = [graph.to(args['device']) for graph in g]
 
-    # stopper = EarlyStopping(patience=args['patience'])
-    # loss_fcn = torch.nn.CrossEntropyLoss()
-    # optimizer = torch.optim.Adam(model.parameters(), lr=args['lr'],
-    #                              weight_decay=args['weight_decay'])
+    stopper = EarlyStopping(patience=args['patience'])
+    loss_fcn = torch.nn.CrossEntropyLoss()
+    optimizer = torch.optim.Adam(model.parameters(), lr=args['lr'],
+                                 weight_decay=args['weight_decay'])
 
-    # for epoch in range(args['num_epochs']):
-    #     model.train()
-    #     logits = model(g, features)
-    #     loss = loss_fcn(logits[train_mask], labels[train_mask])
+    for epoch in range(args['num_epochs']):
+        model.train()
+        logits = model(g, features)
+        loss = loss_fcn(logits[train_mask], labels[train_mask])
 
-    #     optimizer.zero_grad()
-    #     loss.backward()
-    #     optimizer.step()
+        optimizer.zero_grad()
+        loss.backward()
+        optimizer.step()
 
-    #     train_acc, train_micro_f1, train_macro_f1 = score(logits[train_mask], labels[train_mask])
-    #     val_loss, val_acc, val_micro_f1, val_macro_f1 = evaluate(model, g, features, labels, val_mask, loss_fcn)
-    #     early_stop = stopper.step(val_loss.data.item(), val_acc, model)
+        train_acc, train_micro_f1, train_macro_f1 = score(logits[train_mask], labels[train_mask])
+        val_loss, val_acc, val_micro_f1, val_macro_f1 = evaluate(model, g, features, labels, val_mask, loss_fcn)
+        early_stop = stopper.step(val_loss.data.item(), val_acc, model)
 
-    #     print('Epoch {:d} | Train Loss {:.4f} | Train Micro f1 {:.4f} | Train Macro f1 {:.4f} | '
-    #           'Val Loss {:.4f} | Val Micro f1 {:.4f} | Val Macro f1 {:.4f}'.format(
-    #         epoch + 1, loss.item(), train_micro_f1, train_macro_f1, val_loss.item(), val_micro_f1, val_macro_f1))
+        print('Epoch {:d} | Train Loss {:.4f} | Train Micro f1 {:.4f} | Train Macro f1 {:.4f} | '
+              'Val Loss {:.4f} | Val Micro f1 {:.4f} | Val Macro f1 {:.4f}'.format(
+            epoch + 1, loss.item(), train_micro_f1, train_macro_f1, val_loss.item(), val_micro_f1, val_macro_f1))
 
-    #     if early_stop:
-    #         break
+        if early_stop:
+            break
 
-    # stopper.load_checkpoint(model)
-    # test_loss, test_acc, test_micro_f1, test_macro_f1 = evaluate(model, g, features, labels, test_mask, loss_fcn)
-    # print('Test loss {:.4f} | Test Micro f1 {:.4f} | Test Macro f1 {:.4f}'.format(
-    #     test_loss.item(), test_micro_f1, test_macro_f1))
+    stopper.load_checkpoint(model)
+    test_loss, test_acc, test_micro_f1, test_macro_f1 = evaluate(model, g, features, labels, test_mask, loss_fcn)
+    print('Test loss {:.4f} | Test Micro f1 {:.4f} | Test Macro f1 {:.4f}'.format(
+        test_loss.item(), test_micro_f1, test_macro_f1))
 
 if __name__ == '__main__':
     import argparse

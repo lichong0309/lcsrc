@@ -203,8 +203,8 @@ if __name__ == '__main__':
     ap.add_argument('--rnn-type', default='RotatE0', help='Type of the aggregator. Default is RotatE0.')
     ap.add_argument('--epoch', type=int, default=100, help='Number of epochs. Default is 100.')
     ap.add_argument('--patience', type=int, default=5, help='Patience. Default is 5.')
-    ap.add_argument('--batch-size', type=int, default=8, help='Batch size. Default is 8.')
-    ap.add_argument('--samples', type=int, default=100, help='Number of neighbors sampled. Default is 100.')
+    ap.add_argument('--batch-size', type=int, default=1, help='Batch size. Default is 8.')
+    ap.add_argument('--samples', type=int, default=None, help='Number of neighbors sampled. Default is 100.')
     ap.add_argument('--repeat', type=int, default=1, help='Repeat the training and testing for N times. Default is 1.')
     ap.add_argument('--save-postfix', default='DBLP', help='Postfix for the saved model and result. Default is DBLP.')
 

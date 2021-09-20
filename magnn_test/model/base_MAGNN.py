@@ -3,6 +3,7 @@ import torch.nn as nn
 import torch.nn.functional as F
 import dgl.function as fn
 from dgl.nn.pytorch import edge_softmax
+import time
 
 
 class MAGNN_metapath_specific(nn.Module):
@@ -171,9 +172,14 @@ class MAGNN_metapath_specific(nn.Module):
         g.edata.update({'eft': eft, 'a': a})
         # compute softmax normalized attention values
         self.edge_softmax(g)
+
+        t0 = time.time()
         # compute the aggregated node features scaled by the dropped,
         # unnormalized attention values.
         g.update_all(self.message_passing, fn.sum('ft', 'ft'))
+        t1 = time.time()
+        t = t1 - t0
+        print("time:", t)
         ret = g.ndata['ft']  # E x num_heads x out_dim
 
         if self.use_minibatch:

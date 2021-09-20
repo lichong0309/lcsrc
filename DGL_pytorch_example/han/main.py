@@ -30,9 +30,11 @@ def main(args):
     # 得到数据集 和 graph ：g
     g, features, labels, num_classes, train_idx, val_idx, test_idx, train_mask, \
     val_mask, test_mask = load_data(args['dataset'])
+
     print("g:",g)
     n_num = g.number_of_edges()
     print("test_num:", n_num)
+    print("test:",g.ndata['h'])
 
 
     if hasattr(torch, 'BoolTensor'):
@@ -46,9 +48,14 @@ def main(args):
     val_mask = val_mask.to(args['device'])
     test_mask = test_mask.to(args['device'])
 
+    ### 定义meta_paths:
+    meta_paths=[['pa', 'ap'], ['pf', 'fp']]  
+
+
+    
     if args['hetero']:
         from model_hetero import HAN
-        model = HAN(meta_paths=[['pa', 'ap'], ['pf', 'fp']],
+        model = HAN(meta_paths=meta_paths,
                     in_size=features.shape[1],
                     hidden_size=args['hidden_units'],
                     out_size=num_classes,

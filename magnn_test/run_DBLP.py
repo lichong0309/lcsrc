@@ -80,7 +80,7 @@ def run_model_DBLP(feats_type, hidden_dim, num_heads, attn_vec_dim, rnn_type,
         dur3 = []
         train_idx_generator = index_generator(batch_size=batch_size, indices=train_idx)
         val_idx_generator = index_generator(batch_size=batch_size, indices=val_idx, shuffle=False)
-        for epoch in range(num_epochs):
+        for epoch in range(1):
             t_start = time.time()
             # training
             net.train()
@@ -115,78 +115,78 @@ def run_model_DBLP(feats_type, hidden_dim, num_heads, attn_vec_dim, rnn_type,
                 dur3.append(t3 - t2)
 
                 # print training info
-                if iteration % 50 == 0:
-                    print(
-                        'Epoch {:05d} | Iteration {:05d} | Train_Loss {:.4f} | Time1(s) {:.4f} | Time2(s) {:.4f} | Time3(s) {:.4f}'.format(
-                            epoch, iteration, train_loss.item(), np.mean(dur1), np.mean(dur2), np.mean(dur3)))
+                # if iteration % 50 == 0:
+                print(
+                    'Epoch {:05d} | Iteration {:05d} | Train_Loss {:.4f} | Time1(s) {:.4f} | Time2(s) {:.4f} | Time3(s) {:.4f}'.format(
+                        epoch, iteration, train_loss.item(), np.mean(dur1), np.mean(dur2), np.mean(dur3)))
 
-            # validation
-            net.eval()
-            val_logp = []
-            with torch.no_grad():
-                for iteration in range(val_idx_generator.num_iterations()):
-                    # forward
-                    val_idx_batch = val_idx_generator.next()
-                    val_g_list, val_indices_list, val_idx_batch_mapped_list = parse_minibatch(
-                        adjlists, edge_metapath_indices_list, val_idx_batch, device, neighbor_samples)
-                    logits, embeddings = net(
-                        (val_g_list, features_list, type_mask, val_indices_list, val_idx_batch_mapped_list))
-                    logp = F.log_softmax(logits, 1)
-                    val_logp.append(logp)
-                val_loss = F.nll_loss(torch.cat(val_logp, 0), labels[val_idx])
-            t_end = time.time()
-            # print validation info
-            print('Epoch {:05d} | Val_Loss {:.4f} | Time(s) {:.4f}'.format(
-                epoch, val_loss.item(), t_end - t_start))
-            # early stopping
-            early_stopping(val_loss, net)
-            if early_stopping.early_stop:
-                print('Early stopping!')
-                break
+            # # validation
+            # net.eval()
+            # val_logp = []
+            # with torch.no_grad():
+            #     for iteration in range(val_idx_generator.num_iterations()):
+            #         # forward
+            #         val_idx_batch = val_idx_generator.next()
+            #         val_g_list, val_indices_list, val_idx_batch_mapped_list = parse_minibatch(
+            #             adjlists, edge_metapath_indices_list, val_idx_batch, device, neighbor_samples)
+            #         logits, embeddings = net(
+            #             (val_g_list, features_list, type_mask, val_indices_list, val_idx_batch_mapped_list))
+            #         logp = F.log_softmax(logits, 1)
+            #         val_logp.append(logp)
+            #     val_loss = F.nll_loss(torch.cat(val_logp, 0), labels[val_idx])
+            # t_end = time.time()
+            # # print validation info
+            # print('Epoch {:05d} | Val_Loss {:.4f} | Time(s) {:.4f}'.format(
+            #     epoch, val_loss.item(), t_end - t_start))
+            # # early stopping
+            # early_stopping(val_loss, net)
+            # if early_stopping.early_stop:
+            #     print('Early stopping!')
+            #     break
 
-        # testing with evaluate_results_nc
-        test_idx_generator = index_generator(batch_size=batch_size, indices=test_idx, shuffle=False)
-        net.load_state_dict(torch.load('checkpoint/checkpoint_{}.pt'.format(save_postfix)))
-        net.eval()
-        test_embeddings = []
-        with torch.no_grad():
-            for iteration in range(test_idx_generator.num_iterations()):
-                # forward
-                test_idx_batch = test_idx_generator.next()
-                test_g_list, test_indices_list, test_idx_batch_mapped_list = parse_minibatch(adjlists,
-                                                                                             edge_metapath_indices_list,
-                                                                                             test_idx_batch,
-                                                                                             device, neighbor_samples)
-                logits, embeddings = net((test_g_list, features_list, type_mask, test_indices_list, test_idx_batch_mapped_list))
-                test_embeddings.append(embeddings)
-            test_embeddings = torch.cat(test_embeddings, 0)
-            svm_macro_f1_list, svm_micro_f1_list, nmi_mean, nmi_std, ari_mean, ari_std = evaluate_results_nc(
-                test_embeddings.cpu().numpy(), labels[test_idx].cpu().numpy(), num_classes=out_dim)
-        svm_macro_f1_lists.append(svm_macro_f1_list)
-        svm_micro_f1_lists.append(svm_micro_f1_list)
-        nmi_mean_list.append(nmi_mean)
-        nmi_std_list.append(nmi_std)
-        ari_mean_list.append(ari_mean)
-        ari_std_list.append(ari_std)
+        # # testing with evaluate_results_nc
+        # test_idx_generator = index_generator(batch_size=batch_size, indices=test_idx, shuffle=False)
+        # net.load_state_dict(torch.load('checkpoint/checkpoint_{}.pt'.format(save_postfix)))
+        # net.eval()
+        # test_embeddings = []
+        # with torch.no_grad():
+        #     for iteration in range(test_idx_generator.num_iterations()):
+        #         # forward
+        #         test_idx_batch = test_idx_generator.next()
+        #         test_g_list, test_indices_list, test_idx_batch_mapped_list = parse_minibatch(adjlists,
+        #                                                                                      edge_metapath_indices_list,
+        #                                                                                      test_idx_batch,
+        #                                                                                      device, neighbor_samples)
+        #         logits, embeddings = net((test_g_list, features_list, type_mask, test_indices_list, test_idx_batch_mapped_list))
+        #         test_embeddings.append(embeddings)
+        #     test_embeddings = torch.cat(test_embeddings, 0)
+        #     svm_macro_f1_list, svm_micro_f1_list, nmi_mean, nmi_std, ari_mean, ari_std = evaluate_results_nc(
+        #         test_embeddings.cpu().numpy(), labels[test_idx].cpu().numpy(), num_classes=out_dim)
+        # svm_macro_f1_lists.append(svm_macro_f1_list)
+        # svm_micro_f1_lists.append(svm_micro_f1_list)
+        # nmi_mean_list.append(nmi_mean)
+        # nmi_std_list.append(nmi_std)
+        # ari_mean_list.append(ari_mean)
+        # ari_std_list.append(ari_std)
 
-    # print out a summary of the evaluations
-    svm_macro_f1_lists = np.transpose(np.array(svm_macro_f1_lists), (1, 0, 2))
-    svm_micro_f1_lists = np.transpose(np.array(svm_micro_f1_lists), (1, 0, 2))
-    nmi_mean_list = np.array(nmi_mean_list)
-    nmi_std_list = np.array(nmi_std_list)
-    ari_mean_list = np.array(ari_mean_list)
-    ari_std_list = np.array(ari_std_list)
-    print('----------------------------------------------------------------')
-    print('SVM tests summary')
-    print('Macro-F1: ' + ', '.join(['{:.6f}~{:.6f} ({:.1f})'.format(
-        macro_f1[:, 0].mean(), macro_f1[:, 1].mean(), train_size) for macro_f1, train_size in
-        zip(svm_macro_f1_lists, [0.8, 0.6, 0.4, 0.2])]))
-    print('Micro-F1: ' + ', '.join(['{:.6f}~{:.6f} ({:.1f})'.format(
-        micro_f1[:, 0].mean(), micro_f1[:, 1].mean(), train_size) for micro_f1, train_size in
-        zip(svm_micro_f1_lists, [0.8, 0.6, 0.4, 0.2])]))
-    print('K-means tests summary')
-    print('NMI: {:.6f}~{:.6f}'.format(nmi_mean_list.mean(), nmi_std_list.mean()))
-    print('ARI: {:.6f}~{:.6f}'.format(ari_mean_list.mean(), ari_std_list.mean()))
+    # # print out a summary of the evaluations
+    # svm_macro_f1_lists = np.transpose(np.array(svm_macro_f1_lists), (1, 0, 2))
+    # svm_micro_f1_lists = np.transpose(np.array(svm_micro_f1_lists), (1, 0, 2))
+    # nmi_mean_list = np.array(nmi_mean_list)
+    # nmi_std_list = np.array(nmi_std_list)
+    # ari_mean_list = np.array(ari_mean_list)
+    # ari_std_list = np.array(ari_std_list)
+    # print('----------------------------------------------------------------')
+    # print('SVM tests summary')
+    # print('Macro-F1: ' + ', '.join(['{:.6f}~{:.6f} ({:.1f})'.format(
+    #     macro_f1[:, 0].mean(), macro_f1[:, 1].mean(), train_size) for macro_f1, train_size in
+    #     zip(svm_macro_f1_lists, [0.8, 0.6, 0.4, 0.2])]))
+    # print('Micro-F1: ' + ', '.join(['{:.6f}~{:.6f} ({:.1f})'.format(
+    #     micro_f1[:, 0].mean(), micro_f1[:, 1].mean(), train_size) for micro_f1, train_size in
+    #     zip(svm_micro_f1_lists, [0.8, 0.6, 0.4, 0.2])]))
+    # print('K-means tests summary')
+    # print('NMI: {:.6f}~{:.6f}'.format(nmi_mean_list.mean(), nmi_std_list.mean()))
+    # print('ARI: {:.6f}~{:.6f}'.format(ari_mean_list.mean(), ari_std_list.mean()))
 
 
 if __name__ == '__main__':

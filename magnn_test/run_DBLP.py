@@ -27,7 +27,8 @@ def run_model_DBLP(feats_type, hidden_dim, num_heads, attn_vec_dim, rnn_type,
     # labels:
     # train_val_test_idx: 
     adjlists, edge_metapath_indices_list, features_list, adjM, type_mask, labels, train_val_test_idx = load_DBLP_data()
-    device = torch.device('cuda:0' if torch.cuda.is_available() else 'cpu')
+    # device = torch.device('cuda:0' if torch.cuda.is_available() else 'cpu')
+    device = torch.device('cpu')
     features_list = [torch.FloatTensor(features).to(device) for features in features_list]
     if feats_type == 0:
         in_dims = [features.shape[1] for features in features_list]

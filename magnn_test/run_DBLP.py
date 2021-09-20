@@ -84,7 +84,7 @@ def run_model_DBLP(feats_type, hidden_dim, num_heads, attn_vec_dim, rnn_type,
             t_start = time.time()
             # training
             net.train()
-            for iteration in range(train_idx_generator.num_iterations()):
+            for iteration in range(1):
                 # forward
                 t0 = time.time()
 

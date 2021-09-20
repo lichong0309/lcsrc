@@ -53,7 +53,7 @@ def main(args):
                     out_size=num_classes,
                     num_heads=args['num_heads'],
                     dropout=args['dropout']).to(args['device'])
-        g = dgl.to_homogeneous(g,ndata=['h'])
+        g = dgl.to_homogeneous(g,ndata=features)
         print("test finsh...")
         g = g.to(args['device'])
 

@@ -74,6 +74,7 @@ class MAGNN_metapath_specific(nn.Module):
         return {'ft': ft}
 
     def forward(self, inputs):
+        t0 = time.time()
         # features: num_all_nodes x out_dim
         if self.use_minibatch:
             g, features, type_mask, edge_metapath_indices, target_idx = inputs
@@ -173,7 +174,7 @@ class MAGNN_metapath_specific(nn.Module):
         # compute softmax normalized attention values
         self.edge_softmax(g)
 
-        t0 = time.time()
+
         # compute the aggregated node features scaled by the dropped,
         # unnormalized attention values.
         g.update_all(self.message_passing, fn.sum('ft', 'ft'))

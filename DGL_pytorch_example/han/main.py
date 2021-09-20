@@ -3,6 +3,8 @@ from sklearn.metrics import f1_score
 import dgl
 
 from utils import load_data, EarlyStopping
+from gcn_mp_1 import GCN_1
+import torch.nn.functional as F
 
 def score(logits, labels):
     _, indices = torch.max(logits, dim=1)
@@ -54,14 +56,21 @@ def main(args):
 
     
     if args['hetero']:
-        from model_hetero import HAN
-        model = HAN(meta_paths=meta_paths,
-                    in_size=features.shape[1],
-                    hidden_size=args['hidden_units'],
-                    out_size=num_classes,
-                    num_heads=args['num_heads'],
-                    dropout=args['dropout']).to(args['device'])
-        g = g.to(args['device'])
+        # from model_hetero import HAN
+        # model = HAN(meta_paths=meta_paths,
+        #             in_size=features.shape[1],
+        #             hidden_size=args['hidden_units'],
+        #             out_size=num_classes,
+        #             num_heads=args['num_heads'],
+        #             dropout=args['dropout']).to(args['device'])
+        # g = g.to(args['device'])
+        model = GCN_1(g,
+            features.shape[1],
+            args['hidden_units'],
+            num_classes,
+            1,
+            F.relu,
+            )
     else:
         from model import HAN
         model = HAN(num_meta_paths=len(g),

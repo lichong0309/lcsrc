@@ -117,6 +117,8 @@ def parse_minibatch(adjlists, edge_metapath_indices_list, idx_batch, device, sam
             result_indices = torch.LongTensor(result_indices[sorted_index]).to(device)
         else:
             result_indices = torch.LongTensor(result_indices).to(device)
+        print("graph test:",g)
+        print("graphtest:", g.is_homogeneous)
         
         # ### 获得原图g的邻接矩阵
         # g_adj = g.adjacency_matrix()
@@ -183,7 +185,7 @@ def parse_minibatch(adjlists, edge_metapath_indices_list, idx_batch, device, sam
 
         #g.add_edges(*list(zip(*[(dst, src) for src, dst in sorted(edges)])))
         #result_indices = torch.LongTensor(result_indices).to(device)
-        print("graph test:",g)
+        
         g_list.append(g)
         result_indices_list.append(result_indices)
         idx_batch_mapped_list.append(np.array([mapping[idx] for idx in idx_batch]))

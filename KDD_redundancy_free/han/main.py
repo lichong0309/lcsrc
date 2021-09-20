@@ -54,7 +54,7 @@ def main(args):
                     num_heads=args['num_heads'],
                     dropout=args['dropout']).to(args['device'])
         g.srcdata['h'] = features
-        g = dgl.to_homogeneous(g,ndata=['h'])
+        g = dgl.to_homogeneous(g,ndata=['features'])
         print("test finsh...")
         g = g.to(args['device'])
 

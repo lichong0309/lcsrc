@@ -47,7 +47,9 @@ def main(args):
 
 
     for meta_path in meta_paths:       # 循环每个metapath
+        print("meta_path:", meta_path)
         mp = meta_path[0]
+        print("mp:", mp)
         new_graph = dgl.metapath_reachable_graph(g, mp) # 得到新图
         # 返回edge的数量
         new_graph_number_of_edges = new_graph.number_of_edges()

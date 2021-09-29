@@ -72,7 +72,8 @@ def main(args):
             print("num_nl_successors:", num_nl_successors)
             for nls in nl_successors:
                 # 后继节点创建的子图
-                nl_subgraph = g.subgraph(nls)
+                # nl_subgraph = g.subgraph(nls)
+                nl_subgraph = dgl.node_subgraph(g, {'author':[nls]})
                 new_graph_nl_subgraph = dgl.metapath_reachable_graph(nl_subgraph, ['ap'])
                 # 获得new_graph_nl_subgraph的edge的数量
                 num_edge_nl_subgraph = new_graph_nl_subgraph.number_of_edges()

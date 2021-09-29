@@ -67,6 +67,7 @@ def main(args):
         computation_num_redundancy_free = 0
         for nl in nodelist:
             nl_successors = new_graph.successors(nl)  # nodelist的后继节点
+            print("nl_successors:", nl_successors)
             num_nl_successors = len(nl_successors)    # 后继节点的数量
             num_edge_first = num_nl_successors + num_edge_first      # 第一层的edge的数量
             print("num_nl_successors:", num_nl_successors)

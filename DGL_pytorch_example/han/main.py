@@ -1,5 +1,6 @@
 import torch
 from sklearn.metrics import f1_score
+import time
 
 from utils import load_data, EarlyStopping
 
@@ -65,6 +66,7 @@ def main(args):
                                  weight_decay=args['weight_decay'])
 
     for epoch in range(args['num_epochs']):
+        t0 = time.time()
         model.train()
         logits = model(g, features)
         loss = loss_fcn(logits[train_mask], labels[train_mask])
@@ -83,6 +85,8 @@ def main(args):
 
         if early_stop:
             break
+        t1 = time.time()
+        print("time:",(t1 - t0))
 
     stopper.load_checkpoint(model)
     test_loss, test_acc, test_micro_f1, test_macro_f1 = evaluate(model, g, features, labels, test_mask, loss_fcn)

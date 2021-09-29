@@ -48,7 +48,7 @@ def main(args):
 
     for meta_path in meta_paths:       # 循环每个metapath
         print("meta_path:", meta_path)
-        mp = ['pa']
+        mp = ['pf']
         print("mp:", mp)
         new_graph = dgl.metapath_reachable_graph(g, mp) # 得到新图
         # 返回edge的数量
@@ -77,7 +77,7 @@ def main(args):
                 # new_graph_nl_subgraph = dgl.metapath_reachable_graph(nl_subgraph, ['ap'])
                 # # 获得new_graph_nl_subgraph的edge的数量
                 # num_edge_nl_subgraph = new_graph_nl_subgraph.number_of_edges()
-                num_edge_nl_subgraph = len(g.successors(nls, etype='ap'))
+                num_edge_nl_subgraph = len(g.successors(nls, etype='fp'))
                 print("number_edge_nl_subgraph:", num_edge_nl_subgraph)
                 num_edge_second = num_edge_second + num_edge_nl_subgraph     # 计算第二层的edge的数量
                 # num_edge_second_rendundancy_free = num_edge_second - 1 + num_edge_second_rendundancy_free

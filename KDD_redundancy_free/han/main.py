@@ -48,7 +48,7 @@ def main(args):
 
     for meta_path in meta_paths:       # 循环每个metapath
         print("meta_path:", meta_path)
-        mp = meta_path[0]
+        mp = ['pa']
         print("mp:", mp)
         new_graph = dgl.metapath_reachable_graph(g, mp) # 得到新图
         # 返回edge的数量
@@ -73,7 +73,7 @@ def main(args):
             for nls in nl_successors:
                 # 后继节点创建的子图
                 nl_subgraph = g.subgraph(nls)
-                new_graph_nl_subgraph = dgl.metapath_reachable_graph(nl_subgraph, meta_path[1])
+                new_graph_nl_subgraph = dgl.metapath_reachable_graph(nl_subgraph, ['ap'])
                 # 获得new_graph_nl_subgraph的edge的数量
                 num_edge_nl_subgraph = new_graph_nl_subgraph.number_of_edges()
                 print("number_edge_nl_subgraph:", num_edge_nl_subgraph)

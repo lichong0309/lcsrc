@@ -72,12 +72,12 @@ def main(args):
             num_edge_first = num_nl_successors + num_edge_first      # 第一层的edge的数量
             print("num_nl_successors:", num_nl_successors)
             for nls in nl_successors:
-                # 后继节点创建的子图
-                # nl_subgraph = g.subgraph(nls)
-                nl_subgraph = dgl.node_subgraph(g, {'author':[nls]})
-                new_graph_nl_subgraph = dgl.metapath_reachable_graph(nl_subgraph, ['ap'])
-                # 获得new_graph_nl_subgraph的edge的数量
-                num_edge_nl_subgraph = new_graph_nl_subgraph.number_of_edges()
+                # # 后继节点创建的子图
+                # nl_subgraph = dgl.node_subgraph(g, nls)
+                # new_graph_nl_subgraph = dgl.metapath_reachable_graph(nl_subgraph, ['ap'])
+                # # 获得new_graph_nl_subgraph的edge的数量
+                # num_edge_nl_subgraph = new_graph_nl_subgraph.number_of_edges()
+                num_edge_nl_subgraph = len(g.successors(nls))
                 print("number_edge_nl_subgraph:", num_edge_nl_subgraph)
                 num_edge_second = num_edge_second + num_edge_nl_subgraph     # 计算第二层的edge的数量
                 # num_edge_second_rendundancy_free = num_edge_second - 1 + num_edge_second_rendundancy_free

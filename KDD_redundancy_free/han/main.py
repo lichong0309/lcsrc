@@ -97,8 +97,11 @@ def main(args):
     node_of_paper = g.nodes("paper")
     for np in node_of_paper:
         node_of_author = g.successors(np, etype="pa")
+        node_of_field = g.successors(np, etype="pf")
         for na in node_of_author:
-            node_of_paper_second = g.successsors(na, etype='ap')
+            node_of_paper_second_1 = g.successors(na, etype='ap')
+        for nf in node_of_field:
+            node_of_paper_second_2 = g.successors(nf, etype='fp')
     t1 = time.time()
     print("time:",(t1 - t0))
         

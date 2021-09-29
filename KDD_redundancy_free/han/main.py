@@ -50,6 +50,7 @@ def main(args):
         print("meta_path:", meta_path)
         mp = ['pf']
         print("mp:", mp)
+        t0 = time.time()
         new_graph = dgl.metapath_reachable_graph(g, mp) # 得到新图
         # 返回edge的数量
         new_graph_number_of_edges = new_graph.number_of_edges()
@@ -88,6 +89,8 @@ def main(args):
 
         redundancy_num = computation_num_redundancy_free / computation_num
         print("redundancy_num:", redundancy_num)
+        t1 = time.time()
+        print("time:", (t1 - t0))
         
 
         

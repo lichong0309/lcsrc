@@ -77,7 +77,7 @@ def main(args):
                 # new_graph_nl_subgraph = dgl.metapath_reachable_graph(nl_subgraph, ['ap'])
                 # # 获得new_graph_nl_subgraph的edge的数量
                 # num_edge_nl_subgraph = new_graph_nl_subgraph.number_of_edges()
-                num_edge_nl_subgraph = len(g.successors(nls))
+                num_edge_nl_subgraph = len(g.successors(nls, etype='ap'))
                 print("number_edge_nl_subgraph:", num_edge_nl_subgraph)
                 num_edge_second = num_edge_second + num_edge_nl_subgraph     # 计算第二层的edge的数量
                 # num_edge_second_rendundancy_free = num_edge_second - 1 + num_edge_second_rendundancy_free

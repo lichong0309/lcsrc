@@ -43,6 +43,65 @@ def main(args):
     print("g:",g)
     n_num = g.number_of_edges()
     print("test_num:", n_num)
+    meta_paths=[['pa', 'ap'], ['pf', 'fp']]
+
+
+    for meta_path in meta_paths:       # 循环每个metapath
+        mp = meta_path[0]
+        new_graph = dgl.metapath_reachable_graph(g, mp) # 得到新图
+        # 返回edge的数量
+        new_graph_number_of_edges = new_graph.number_of_edges()
+        print("new_graph_number_of_edges:", new_graph_number_of_edges)
+        # 获得paper的nodes
+        nodelist = new_graph.nodes('paper')
+        num_nodelist = len(nodelist)
+        # print("nodelist:",nodelist)
+        print("num_nodelist:", num_nodelist)
+        # 循环nodelist中的节点，寻找metapath的下一部分
+        num_edge_first = 0
+        num_edge_second = 0
+        # num_edge_second_rendundancy_free = 0
+        computation_num = 0
+        computation_num_redundancy_free = 0
+        for nl in nodelist:
+            nl_successors = new_graph.successors(nl)  # nodelist的后继节点
+            num_nl_successors = len(nl_successors)    # 后继节点的数量
+            num_edge_first = num_nl_successors + num_edge_first      # 第一层的edge的数量
+            print("num_nl_successors:", num_nl_successors)
+            for nls in nl_successors:
+                # 后继节点创建的子图
+                nl_subgraph = g.subgraph(nls)
+                new_graph_nl_subgraph = dgl.metapath_reachable_graph(nl_subgraph, meta_path[1])
+                # 获得new_graph_nl_subgraph的edge的数量
+                num_edge_nl_subgraph = new_graph_nl_subgraph.number_of_edges()
+                print("number_edge_nl_subgraph:", num_edge_nl_subgraph)
+                num_edge_second = num_edge_second + num_edge_nl_subgraph     # 计算第二层的edge的数量
+                # num_edge_second_rendundancy_free = num_edge_second - 1 + num_edge_second_rendundancy_free
+        computation_num = 2 * num_edge_second
+        computation_num_redundancy_free = num_edge_first + num_edge_second
+        print("computation_num:", computation_num)
+        print("ccomputation_num_redundancy_free:", computation_num_redundancy_free)
+
+        redundancy_num = computation_num_redundancy_free / computation_num
+        print("redundancy_num:", redundancy_num)
+        
+
+        
+
+
+
+
+
+
+
+
+    
+
+
+
+
+
+
 
     if hasattr(torch, 'BoolTensor'):
         train_mask = train_mask.bool()

@@ -1,6 +1,5 @@
 import torch
 from sklearn.metrics import f1_score
-import dgl
 
 from utils import load_data, EarlyStopping
 
@@ -27,15 +26,8 @@ def evaluate(model, g, features, labels, mask, loss_func):
 def main(args):
     # If args['hetero'] is True, g would be a heterogeneous graph.
     # Otherwise, it will be a list of homogeneous graphs.
-    # 得到数据集 和 graph ：g
     g, features, labels, num_classes, train_idx, val_idx, test_idx, train_mask, \
     val_mask, test_mask = load_data(args['dataset'])
-
-    print("g:",g)
-    n_num = g.number_of_edges()
-    print("test_num:", n_num)
-
-
 
     if hasattr(torch, 'BoolTensor'):
         train_mask = train_mask.bool()
@@ -48,22 +40,15 @@ def main(args):
     val_mask = val_mask.to(args['device'])
     test_mask = test_mask.to(args['device'])
 
-    ### 定义meta_paths:
-    meta_paths=[['pa', 'ap'], ['pf', 'fp']]  
-
-
-    
     if args['hetero']:
         from model_hetero import HAN
-        model = HAN(meta_paths=meta_paths,
+        model = HAN(meta_paths=[['pa', 'ap'], ['pf', 'fp']],
                     in_size=features.shape[1],
                     hidden_size=args['hidden_units'],
                     out_size=num_classes,
                     num_heads=args['num_heads'],
                     dropout=args['dropout']).to(args['device'])
         g = g.to(args['device'])
-        g = dgl.to_homogeneous(g,ndata=['h'])
-        print("test finsh...")
     else:
         from model import HAN
         model = HAN(num_meta_paths=len(g),

@@ -171,6 +171,40 @@ def main(args):
 
 
 
+    t0 = time.time()
+    max_redundancy = 2
+    num_node = g.number_of_nodes()
+    while max_redundancy > 1:
+        redundancy_matrix = np.zeros(num_node, num_node)  
+        for i in range(num_node):
+            predecessors_i = g.predecessors(i)
+            # 循环predecessors
+            for j in range(len(predecessors_i)):
+                for m in range((j+1), len(predecessors_i)):
+                    redundancy_matrix[i][j] + redundancy_matrix[i][j] + 1
+                    redundancy_matrix[j][i] + redundancy_matrix[j][i] + 1
+        
+        # 获得矩阵最大的元素和索引，即redundancy最大的一对node
+        max_index = redundancy_matrix.argmax()
+        node_redundancy_0 = max_index[0]
+        node_redundancy_1 = max_index[1]
+        redundancy_node = list(set(g.successors(node_redundancy_0)).union(set(g.successors(node_redundancy_1))))
+        ######## 添加节点和边 ######### 
+        g.add_nodes(1)      #### 添加节点
+        w = g.number_of_nodes()   ### 添加节点的编号
+        g.add_edges([node_redundancy_0,node_redundancy_1],[w,w])
+
+        ######## 删除边 #########
+        # 删除边
+        for rn in redundancy_node:  
+            rn_edge_id_0 = g.get_etype_id(node_redundancy_0, rn)
+            g.remove_edges(rn_edge_id_0)
+            rn_edge_id_1 = g.get_etype_id(node_redundancy_1, rn)
+            g.remove_edges(rn_edge_id_1)
+        print("test redundancy.......................")
+    t1 = time.time()
+    print("time:", (t1 - t0))
+        
 
 
 
@@ -229,7 +263,7 @@ def main(args):
                 dis_list = same_node_i_j
                 for ltemp in range(len(dis_list)):
                     src_list.append(w)
-                g.add_edge(src_list, dis_list)
+                g.add_edge(src_list, dis_list)          # 添加边
                 ### 删除边
                 for ltemp in same_node_i_j:
                     edge_id = g.edge_ids(i, ltemp)

@@ -178,7 +178,7 @@ def main(args):
         redundancy_matrix = np.zeros((num_node, num_node))  
         for i in range(num_node):
             print("i-th loop:", i)
-            predecessors_i = list(g.predecessors(i))
+            predecessors_i = g.predecessors(i)
             print("predecessors_i:", predecessors_i)
             # 循环predecessors
             for j in range(len(predecessors_i)):
@@ -191,6 +191,8 @@ def main(args):
         print("redundancy_matrix:", redundancy_matrix)
         
         # 获得矩阵最大的元素和索引，即redundancy最大的一对node
+        max_ = np.argmax(redundancy_matrix)
+        print("max_:", max_)
         max_index = list(np.unravel_index(np.argmax(redundancy_matrix), redundancy_matrix.shape))
         print("max_index:", max_index)
         node_redundancy_0 = max_index[0]

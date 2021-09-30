@@ -182,12 +182,11 @@ def main(args):
             print("predecessors_i:", predecessors_i)
             # 循环predecessors
             for j in range(len(predecessors_i)):
-                print("test")
+                print("test:", predecessors_i[j])
                 for m in range((j+1), len(predecessors_i)):
-                    print("test")
+                    print("test:", predecessors_i[m])
                     redundancy_matrix[predecessors_i[m]][predecessors_i[j]] = redundancy_matrix[predecessors_i[m]][predecessors_i[j]] + 1
                     redundancy_matrix[predecessors_i[j]][predecessors_i[m]] = redundancy_matrix[predecessors_i[j]][predecessors_i[m]] + 1
-                    print("test")
         print("redundancy_matrix:", redundancy_matrix)
         
         # 获得矩阵最大的元素和索引，即redundancy最大的一对node

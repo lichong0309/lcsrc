@@ -191,6 +191,7 @@ def main(args):
                     print("redundancy_matrix[predecessors_i[j]][predecessors_i[m]]:", redundancy_matrix[predecessors_i[j]][predecessors_i[m]])
         print("redundancy_matrix:", redundancy_matrix)
         
+        print("test:", redundancy_matrix[989][990])
         # 获得矩阵最大的元素和索引，即redundancy最大的一对node
         max_ = np.argmax(redundancy_matrix)
         print("max_:", max_)

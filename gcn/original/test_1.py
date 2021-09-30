@@ -175,7 +175,7 @@ def main(args):
     max_redundancy = 2
     num_node = g.number_of_nodes()
     while max_redundancy > 1:
-        redundancy_matrix = np.zeros(num_node, num_node)  
+        redundancy_matrix = np.zeros((num_node, num_node))  
         for i in range(num_node):
             predecessors_i = g.predecessors(i)
             # 循环predecessors

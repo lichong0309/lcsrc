@@ -207,9 +207,9 @@ def main(args):
         ######## 删除边 #########
         # 删除边
         for rn in redundancy_node:  
-            rn_edge_id_0 = g.edge_ids(node_redundancy_0, rn)
+            rn_edge_id_0 = g.edge_id(node_redundancy_0, rn)
             g.remove_edges(rn_edge_id_0)
-            rn_edge_id_1 = g.edge_ids(node_redundancy_1, rn)
+            rn_edge_id_1 = g.edge_id(node_redundancy_1, rn)
             g.remove_edges(rn_edge_id_1)
         print("test redundancy.......................")
     t1 = time.time()

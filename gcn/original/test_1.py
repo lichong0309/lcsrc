@@ -201,12 +201,16 @@ def main(args):
         node_redundancy_1 = max_index[1]
         print("node_redundancy_0:",node_redundancy_0)
         print("node_redundancy_1:",node_redundancy_1)
-        redundancy_node = list(set(g.successors(node_redundancy_0)).union(set(g.successors(node_redundancy_1))))
+        redundancy_node = list(set(g.successors(node_redundancy_0)).intersection(set(g.successors(node_redundancy_1))))
         print("redundancy_node:", redundancy_node)
         ######## 添加节点和边 ######### 
         g.add_nodes(1)      #### 添加节点
         w = g.number_of_nodes()   ### 添加节点的编号
         g.add_edges([node_redundancy_0,node_redundancy_1],[w,w])
+        src_list =[]
+        for ltemp in range(len(redundancy_node)):
+            src_list.append(w)
+        g.add_edge(src_list, redundancy_node)          # 添加边
 
         ######## 删除边 #########
         # 删除边

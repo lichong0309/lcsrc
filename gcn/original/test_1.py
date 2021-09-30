@@ -178,7 +178,7 @@ def main(args):
         redundancy_matrix = np.zeros((num_node, num_node))  
         for i in range(num_node):
             print("i-th loop:", i)
-            predecessors_i = g.predecessors(i)
+            predecessors_i = list(g.predecessors(i))
             print("predecessors_i:", predecessors_i)
             # 循环predecessors
             for j in range(len(predecessors_i)):

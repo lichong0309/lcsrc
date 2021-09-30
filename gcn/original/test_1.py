@@ -189,6 +189,8 @@ def main(args):
         print("max_index:", max_index)
         node_redundancy_0 = max_index[0]
         node_redundancy_1 = max_index[1]
+        print("node_redundancy_0:",node_redundancy_0)
+        print("node_redundancy_1:",node_redundancy_1)
         redundancy_node = list(set(g.successors(node_redundancy_0)).union(set(g.successors(node_redundancy_1))))
         ######## 添加节点和边 ######### 
         g.add_nodes(1)      #### 添加节点

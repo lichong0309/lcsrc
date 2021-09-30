@@ -199,6 +199,7 @@ def main(args):
         print("node_redundancy_0:",node_redundancy_0)
         print("node_redundancy_1:",node_redundancy_1)
         redundancy_node = list(set(g.successors(node_redundancy_0)).union(set(g.successors(node_redundancy_1))))
+        print("redundancy_node:", redundancy_node)
         ######## 添加节点和边 ######### 
         g.add_nodes(1)      #### 添加节点
         w = g.number_of_nodes()   ### 添加节点的编号
@@ -207,9 +208,9 @@ def main(args):
         ######## 删除边 #########
         # 删除边
         for rn in redundancy_node:  
-            rn_edge_id_0 = g.edge_id(node_redundancy_0, rn)
+            rn_edge_id_0 = g.edge_ids(node_redundancy_0, rn)
             g.remove_edges(rn_edge_id_0)
-            rn_edge_id_1 = g.edge_id(node_redundancy_1, rn)
+            rn_edge_id_1 = g.edge_ids(node_redundancy_1, rn)
             g.remove_edges(rn_edge_id_1)
         print("test redundancy.......................")
     t1 = time.time()
